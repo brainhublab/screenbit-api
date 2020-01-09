@@ -7,6 +7,8 @@ from django.utils import timezone
 
 from screenbit_core.images_compression import compress_image
 
+# TODO: Rewrite File model
+
 
 class Image(models.Model):
     """
@@ -59,4 +61,3 @@ class File(models.Model):
 @receiver(post_delete, sender=File)
 def file_delete(sender, instance, **kwargs):
     instance.file.delete(False)
-

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <p>Hello World</p>
+    <iframe id="rotator" width="600" height="500" src="http://localhost:9123/screenbit_api/media/msgfiles/2020/01/16/usb.jpg"></iframe>
+
+  </body>
+
+  <script>
+    var station_url = 'http://localhost:9123/screenbit_api/stations/media?mac_addr=';
+    var mac_addr = String(window.location.hash.substr(1));
+    station_url += mac_addr
+    console.log(station_url);
+
+    function httpGet(theUrl)
+    {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", station_url, false ); // false for synchronous request
+        xmlHttp.send( null );
+        return JSON.parse(xmlHttp.responseText);
+    }
+
+    window.onload = function() {
+      var urls = httpGet(station_url);
+      console.log(urls);
+      var index = 1;
+
+      var el = document.getElementById("rotator");
+
+      setTimeout(function rotate() {
+
+        if ( index === urls.length ) {
+          index = 0;
+          urls = httpGet(station_url);
+        }
+
+        el.src = urls[index];
+        console.log(index);
+        console.log(urls[index]);
+        index  = index + 1;
+
+        // continue rotating iframes
+        setTimeout(rotate, 5000);
+
+      }, 5000); // 5000ms = 5s
+    };
+
+  </script>
+
+
+</html>

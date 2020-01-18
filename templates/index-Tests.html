@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <p>Hello World</p>
+  </body>
+
+  <script>
+    var mac_addr = window.location.hash.substr(1);
+    console.log(mac_addr);
+  </script>
+
+</html>
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <!-- <p>Hello World</p>
+    {% if urls %}
+    <iframe src="{{ url }}" frameborder="0" width="560" height="315"></iframe>
+
+        <ul>
+        {% for url in urls %}
+
+        <iframe src="{{ url }}" frameborder="0" width="560" height="315"></iframe>
+            <p>{{ url }}</p>
+
+
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No polls are available.</p>
+    {% endif %} -->
+  </body>
+
+  <script>
+  // start when the page is loaded
+  window.onload = function() {
+
+    var urls = "{{urls}}";
+    console.log(urls);
+    var index = 1;
+    var i;
+    for (i = 0; i < cars.urls; i++) {
+      print()
+    }
+
+    var el = document.getElementById("rotator");
+
+    setTimeout(function rotate() {
+
+      if ( index === urls.length ) {
+        index = 0;
+      }
+
+      el.src = urls[index];
+      console.log(index);
+      console.log(urls[index]);
+      index  = index + 1;
+
+      // continue rotating iframes
+      setTimeout(rotate, 5000);
+
+    }, 5000); // 5000ms = 5s
+  };
+  </script>
+
+</html>

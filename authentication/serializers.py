@@ -15,9 +15,6 @@ class CustomRegisterSerializer(RegisterSerializer):
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
 
-    officeRnD_id = serializers.CharField(
-        max_length=100, required=False, allow_blank=True)
-
     bio = serializers.CharField(
         max_length=500, required=False, allow_blank=True)
     phone = serializers.CharField(
@@ -30,21 +27,6 @@ class CustomRegisterSerializer(RegisterSerializer):
     address = serializers.CharField(
         max_length=100, required=True, allow_blank=False)
 
-    # def get_cleaned_data(self):
-    #     # super(CustomRegisterSerializer, self).get_cleaned_data()
-    #
-    #     return {
-    #         'password1': self.validated_data.get('password1', ''),
-    #         'email': self.validated_data.get('email', ''),
-    #         'first_name': self.validated_data.get('first_name', ''),
-    #         'last_name': self.validated_data.get('last_name', ''),
-    #         'phone': self.validated_data.get('phone', ''),
-    #         'bio': self.validated_data.get('bio', ''),
-    #         'country_id': self.validated_data.get('country_id', ''),
-    #         'country': self.validated_data.get('country', ''),
-    #         'address': self.validated_data.get('address', ''),
-    #     }
-
     def create(self, validated_data):
         user = User.objects.create_user(
             email=validated_data['email'],
@@ -55,8 +37,7 @@ class CustomRegisterSerializer(RegisterSerializer):
             bio=validated_data['bio'],
             country_id=validated_data['country_id'],
             country=validated_data['country'],
-            address=validated_data['address'],
-            officeRnD_id=validated_data['officeRnD_id']
+            address=validated_data['address']
         )
         return user
 

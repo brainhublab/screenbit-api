@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from .models import Client
+from .models import Pprovider
 
 
-class ClientSerializer(serializers.HyperlinkedModelSerializer):
-    """Client serializer"""
+class PlaceProviderSerializer(serializers.HyperlinkedModelSerializer):
+    """Place Provider serializer"""
 
     class Meta:
-        model = Client
+        model = Pprovider
         fields = ("id", "url", "creator", "creator_id", "f_name", "l_name",
                   "organization", "email", "phone", "p_addr",
                   "created_at", "updated_at")

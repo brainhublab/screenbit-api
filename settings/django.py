@@ -66,7 +66,12 @@ INSTALLED_APPS = [
     'public_configs',
 
     # added
-
+    "stations",
+    "pproviders",
+    "clients",
+    "ads",
+    "programs",
+    
     # auth
     'oauth2_provider',
     'social_django',

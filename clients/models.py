@@ -11,13 +11,13 @@ class Client(models.Model):
     """
     creator = models.ForeignKey(
         User,
-        null=False,
-        on_delete=models.CASCADE,
+        null=True,
+        on_delete=models.SET_NULL,
         related_name='Client')
 
-    f_name = models.TextField(max_length=60, blank=False)
-    l_name = models.TextField(max_length=60, blank=False)
-    organization = models.TextField(max_length=60, blank=True)
+    f_name = models.TextField(max_length=60, null=False)
+    l_name = models.TextField(max_length=60, null=False)
+    organization = models.TextField(max_length=60, null=True)
 
     email = models.EmailField(('email address'), unique=True)
     phone = models.TextField(max_length=60, blank=False)
@@ -25,3 +25,6 @@ class Client(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def full_name(self):
+        return self.f_name + self.l_name

@@ -15,19 +15,19 @@ class Ad(models.Model):
     """
     creator = models.ForeignKey(
         User,
-        null=False,
-        on_delete=models.CASCADE,
+        null=True,
+        on_delete=models.SET_NULL,
         related_name='Ad')
 
-    client_id = models.ForeignKey(
+    client = models.ForeignKey(
         Client,
-        null=False,
+        null=True,
         on_delete=models.CASCADE,
         related_name='Ad')
 
-    name = models.TextField(max_length=60, blank=False)
-    description = models.TextField(max_length=300, blank=False)
-    media_file = GenericRelation(File, blank=True)
+    title = models.TextField(max_length=60, null=False, blank=False)
+    description = models.TextField(max_length=300, null=False, blank=False)
+    file = GenericRelation(File, null=False)
 
     VIDEO = "VD"
     IMAGE = "IM"
@@ -41,8 +41,6 @@ class Ad(models.Model):
         max_length=2,
         choices=MEDIA_TYPES,
         null=True)
-
-    media_url = models.TextField(blank=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

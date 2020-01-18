@@ -1,5 +1,5 @@
-from .models import Client
-from .serializers import ClientSerializer
+from .models import Pprovider
+from .serializers import PlaceProviderSerializer
 from screenbit_core.permissions import IsAdminUserOrReadOnly
 
 from rest_framework import viewsets, filters
@@ -8,12 +8,12 @@ from django_filters import rest_framework as django_rest_filters
 from django.core.exceptions import PermissionDenied
 
 
-class ClientViewSet(viewsets.ModelViewSet):
+class PlaceProviderViewSet(viewsets.ModelViewSet):
     """
-    Client viewset
+    Place provider viewset
     """
-    queryset = Client.objects.all()
-    serializer_class = ClientSerializer
+    queryset = Pprovider.objects.all()
+    serializer_class = PlaceProviderSerializer
     permission_classes = (IsAdminUserOrReadOnly, )
     filter_backends = (filters.SearchFilter,
                        django_rest_filters.DjangoFilterBackend, )

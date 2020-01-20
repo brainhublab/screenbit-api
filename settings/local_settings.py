@@ -1,7 +1,8 @@
 import os
 
-API_HOST = os.environ.get('screenbit_API_HOST')
-API_PORT = os.environ.get('screenbit_API_PORT')
+API_HOST = os.environ.get('SCREENBIT_API_HOST')
+API_PORT = os.environ.get('SCREENBIT_API_PORT')
+MEDIA_URL = os.environ.get('MEDIA_API_URL')
 
 # cache server location
 MEMCACHED_LOCATION = os.environ.get('MEMCACHED_LOCATION')

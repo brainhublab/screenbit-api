@@ -1,7 +1,7 @@
 from .models import Station
 from .serializers import StationSerializer, StationLocationSerializer
 from screenbit_core.permissions import IsAdminUserOrReadOnly
-import json
+from settings.local_settings import MEDIA_URL
 
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -56,7 +56,22 @@ class StationViewSet(viewsets.ModelViewSet):
         if "mac_addr" in params:
             mac_addr = int(params["mac_addr"])
             station = get_object_or_404(Station, mac_addr=mac_addr)
-            return Response(station.program.media_urls)
+            if station.program is not None:
+                media_data = {}
+                index = 0
+                ads = station.program.ads.all()
+                for ad in ads:
+                    media_data[index] = {
+                            "type": ad.media_type,
+                            "url": MEDIA_URL + str(ad.file.get().file)
+                        }
+                    index += 1
+                media_data["count"] = station.program.ads.count()
+                return Response(media_data)
+            else:
+                return Response({
+                    "message": "This station dont have media program."
+                    })
 
     @action(detail=False, methods=['get'])
     def locations(self, request):

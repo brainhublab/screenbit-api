@@ -7,24 +7,24 @@ from django_filters import BaseInFilter, CharFilter, rest_framework as django_re
 
 from django.core.exceptions import PermissionDenied
 
-""" Custom filter to find media programs which
-    contain specific advertising """
-
-
-class CharInFilter(BaseInFilter, CharFilter):
-    pass
-
-
-class IdsArrFilter(django_rest_filters.FilterSet):
-    ad_ids = CharInFilter(field_name='ad_ids', lookup_expr='contains')
-    media_urls = CharInFilter(field_name='media_urls', lookup_expr='contains')
-
-    class Meta:
-        model = Program
-        fields = (
-            "ad_ids",
-            "media_urls"
-        )
+# """ Custom filter to find media programs which
+#     contain specific advertising """
+#
+#
+# class CharInFilter(BaseInFilter, CharFilter):
+#     pass
+#
+#
+# class IdsArrFilter(django_rest_filters.FilterSet):
+#     ad_ids = CharInFilter(field_name='ad_ids', lookup_expr='contains')
+#     media_urls = CharInFilter(field_name='media_urls', lookup_expr='contains')
+#
+#     class Meta:
+#         model = Program
+#         fields = (
+#             "ad_ids",
+#             # "media_urls"
+#         )
 
 
 class ProgramViewSet(viewsets.ModelViewSet):
@@ -36,11 +36,7 @@ class ProgramViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUserOrReadOnly, )
     filter_backends = (filters.SearchFilter,
                        django_rest_filters.DjangoFilterBackend, )
-    filter_class = IdsArrFilter
-    filterset_fields = (
-        "ad_ids",
-        "media_urls"
-    )
+
     search_fields = ["title", "description"]
 
     def perform_create(self, serializer):
@@ -49,3 +45,4 @@ class ProgramViewSet(viewsets.ModelViewSet):
             serializer.save(creator=self.request.user)
         else:
             raise PermissionDenied()
+        print(serializer.data)

@@ -35,4 +35,3 @@ class FileSerializer(serializers.HyperlinkedModelSerializer):
         model = File
         fields = ('id', 'url', 'file', "created_at", "updated_at", )
         read_only_fields = ('id', 'url', 'file', "created_at", "updated_at",)
-

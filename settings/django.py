@@ -38,11 +38,11 @@ ALLOWED_HOSTS = ['192.168.1.22', 'localhost', '127.0.0.1', "*"]
 # 5MB - 5242880
 # 10MB - 10485760
 # 20MB - 20971520
-# 50MB - 5242880
+# 50MB - 52428800
 # 100MB 104857600
 # 250MB - 214958080
 # 500MB - 429916160
-DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
+DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800
 
 # Application definition
 INSTALLED_APPS = [
@@ -71,7 +71,7 @@ INSTALLED_APPS = [
     "clients",
     "ads",
     "programs",
-    
+
     # auth
     'oauth2_provider',
     'social_django',

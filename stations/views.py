@@ -79,7 +79,6 @@ class StationViewSet(viewsets.ModelViewSet):
         if self.request.user:
             """Get stations by title or citi or place provider"""
             queryset = self.filter_companies_queryset(self.queryset, request)
-
             """Search by latitude, longitude and distance / optional /"""
             params = self.request.query_params
             if "lat1" in params and "long1" in params and "lat2" in params and "long2" in params:
@@ -103,9 +102,3 @@ class StationViewSet(viewsets.ModelViewSet):
 
 def station_portal_view(request):
     return render(request, 'templates/index.html')
-
-
-# def station_portal_view(request, slug):
-#     station = get_object_or_404(Station, slug=slug)
-#     print(type(station.program.media_urls))
-#     return render(request, 'templates/index.html', {'urls': json.dumps(station.program.media_urls)})

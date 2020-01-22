@@ -128,7 +128,8 @@ SITE_ID = 1
 ACCOUNT_ADAPTER = 'authentication.adapters.CustomUserAccountAdapter'
 
 GLOBAL_VARIABLE = {
-    "approved_image_ext": ["jpg", "jpeg", "png", "gift"],
+    "approved_image_ext": ["jpg", "jpeg", "png"],
+    "approved_video_ext": ["mp4", "mkv", "webm", "avi", "wmv", "gif", "flv", "svi"],
     "approved_file_ext": ["txt", 'pdf', 'doc', 'docx', 'xlsx', 'xls']
 }
 

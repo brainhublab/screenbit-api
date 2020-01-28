@@ -1,37 +1,16 @@
 from .models import Program
 from .serializers import ProgramSerializer
 from screenbit_core.permissions import IsAdminUserOrReadOnly
-
-from rest_framework import viewsets, filters
-from django_filters import BaseInFilter, CharFilter, rest_framework as django_rest_filters
-
+from rest_framework import viewsets, filters, serializers
+from django_filters import rest_framework as django_rest_filters
 from django.core.exceptions import PermissionDenied
-
-# """ Custom filter to find media programs which
-#     contain specific advertising """
-#
-#
-# class CharInFilter(BaseInFilter, CharFilter):
-#     pass
-#
-#
-# class IdsArrFilter(django_rest_filters.FilterSet):
-#     ad_ids = CharInFilter(field_name='ad_ids', lookup_expr='contains')
-#     media_urls = CharInFilter(field_name='media_urls', lookup_expr='contains')
-#
-#     class Meta:
-#         model = Program
-#         fields = (
-#             "ad_ids",
-#             # "media_urls"
-#         )
 
 
 class ProgramViewSet(viewsets.ModelViewSet):
     """
     Media program viewset
     """
-    queryset = Program.objects.order_by('-created_at')
+    queryset = Program.objects.all()
     serializer_class = ProgramSerializer
     permission_classes = (IsAdminUserOrReadOnly, )
     filter_backends = (filters.SearchFilter,
@@ -45,4 +24,18 @@ class ProgramViewSet(viewsets.ModelViewSet):
             serializer.save(creator=self.request.user)
         else:
             raise PermissionDenied()
-        print(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        used_in = []
+        daily_programs = instance.dailyprmembership.all()
+        for related_daily in daily_programs:
+            print(related_daily.daily_program.is_in_use)
+            if related_daily.daily_program.is_in_use:
+                used_in.append(related_daily.daily_program.id)
+        print(used_in)
+        if len(used_in) > 0:
+            raise serializers.ValidationError({"message": "Ad is used in activ advertismen",
+                                              "used_in": used_in})
+        else:
+            return super(ProgramViewSet, self).destroy(request, *args, **kwargs)

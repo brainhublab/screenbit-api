@@ -1,10 +1,8 @@
 """Models"""
 from django.db import models
-
 from authentication.models import User
 from clients.models import Client
 from django.utils.translation import ugettext as _
-
 from django.contrib.contenttypes.fields import GenericRelation
 from screenbit_core.models import File
 

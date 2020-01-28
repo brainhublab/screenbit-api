@@ -31,5 +31,5 @@ class PlaceProviderSerializer(serializers.HyperlinkedModelSerializer):
         """Validate creator field"""
         user = self.get_current_user()
         if user != value:
-            raise serializers.VakidationError("You can not create services for another user")
+            raise serializers.ValidationError("You can not create services for another user")
         return value

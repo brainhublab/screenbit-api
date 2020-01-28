@@ -1,24 +1,24 @@
-from .models import Pprovider
-from .serializers import PlaceProviderSerializer
+from .models import DailyProgram
+from .serializers import DailyProgramSerializer
 from screenbit_core.permissions import IsAdminUserOrReadOnly
 
 from rest_framework import viewsets, filters
 from django_filters import rest_framework as django_rest_filters
+
 from django.core.exceptions import PermissionDenied
 
 
-class PlaceProviderViewSet(viewsets.ModelViewSet):
+class DailyProgramViewSet(viewsets.ModelViewSet):
     """
-    Place provider viewset
+    DaiMedia program viewset
     """
-    queryset = Pprovider.objects.all()
-    serializer_class = PlaceProviderSerializer
+    queryset = DailyProgram.objects.order_by('-created_at')
+    serializer_class = DailyProgramSerializer
     permission_classes = (IsAdminUserOrReadOnly, )
     filter_backends = (filters.SearchFilter,
                        django_rest_filters.DjangoFilterBackend, )
-    search_fields = ["email", "phone", "p_addr",
-                     "f_name", "l_name", "organization"]
-    filterset_fields = ["creator_id"]
+
+    search_fields = ["title", "description"]
 
     def perform_create(self, serializer):
         """Add user that make request to serializer data"""
@@ -26,3 +26,4 @@ class PlaceProviderViewSet(viewsets.ModelViewSet):
             serializer.save(creator=self.request.user)
         else:
             raise PermissionDenied()
+        print(serializer.data)

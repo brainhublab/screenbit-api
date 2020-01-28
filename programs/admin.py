@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Program
+from .models import Program, ProgramAdMembership
 
 
 # Register your models here.
 admin.site.register(Program)
+admin.site.register(ProgramAdMembership)

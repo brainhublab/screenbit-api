@@ -1,8 +1,10 @@
 """Models"""
+from django.db.models.signals import post_save, pre_delete
+from django.dispatch import receiver
 from django.db import models
 from authentication.models import User
 from pproviders.models import Pprovider
-from programs.models import Program
+from daily_programs.models import DailyProgram
 from django.utils.translation import ugettext as _
 
 
@@ -22,8 +24,8 @@ class Station(models.Model):
         on_delete=models.SET_NULL,
         related_name='Station')
 
-    program = models.ForeignKey(
-        Program,
+    daily_program = models.ForeignKey(
+        DailyProgram,
         null=True,
         on_delete=models.SET_NULL,
         related_name='Station')
@@ -60,3 +62,21 @@ class Station(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+@receiver(post_save, sender=Station)
+def set_daily_program_in_use_on_save(sender, instance, **kwargs):
+    if instance.daily_program:
+        instance.daily_program.is_in_use = True
+        instance.daily_program.save()
+
+
+@receiver(pre_delete, sender=Station)
+def set_daily_program_in_use_on_delete(sender, instance, **kwargs):
+    if instance.daily_program:
+        if len(Station.objects.filter(daily_program=instance.daily_program)) == 1:
+            instance.daily_program.is_in_use = False
+            instance.daily_program.save()
+    return {
+        "message": "Ok"
+    }

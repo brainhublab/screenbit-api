@@ -1,4 +1,6 @@
 from .models import Station
+from programs.models import ProgramAdMembership
+from daily_programs.models import DailyProgramMembership
 from .serializers import StationSerializer, StationLocationSerializer
 from screenbit_core.permissions import IsAdminUserOrReadOnly
 from settings.local_settings import MEDIA_URL
@@ -9,9 +11,7 @@ from rest_framework import viewsets, filters
 from django.shortcuts import render, get_object_or_404
 
 from django.db.models import Q
-
 from django.core.exceptions import PermissionDenied
-
 from django_filters import rest_framework as django_rest_filters
 
 
@@ -56,17 +56,25 @@ class StationViewSet(viewsets.ModelViewSet):
         if "mac_addr" in params:
             mac_addr = int(params["mac_addr"])
             station = get_object_or_404(Station, mac_addr=mac_addr)
-            if station.program is not None:
+            if station.daily_program is not None:
+                memberships = DailyProgramMembership.objects.filter(daily_program=station.daily_program).order_by("start_time")
                 media_data = {}
-                index = 0
-                ads = station.program.ads.all()
-                for ad in ads:
-                    media_data[index] = {
-                            "type": ad.media_type,
-                            "url": MEDIA_URL + str(ad.file.get().file)
-                        }
-                    index += 1
-                media_data["count"] = station.program.ads.count()
+                program_index = 0
+                for member in memberships:
+                    media_data[program_index] = {
+                        "id": member.program.id,
+                        "start_time": member.start_time,
+                        "stop_time": member.stop_time,
+                    }
+                    program_ad_members = ProgramAdMembership.objects.filter(program=member.program).order_by("ad_index")
+                    media_data[program_index]["program_data"] = {}
+                    for program_ad_member in program_ad_members:
+                        media_data[program_index]["program_data"][program_ad_member.ad_index] = {"type":
+                                                                                                 program_ad_member.ad.media_type,
+                                                                                                 "url":
+                                                                                                 MEDIA_URL + str(program_ad_member.ad.file.get().file)
+                                                                                                 }
+                    program_index += 1
                 return Response(media_data)
             else:
                 return Response({

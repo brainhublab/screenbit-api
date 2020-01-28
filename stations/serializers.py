@@ -7,11 +7,11 @@ class StationSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Station
-        fields = ("id", "url", "creator", 'creator_id', "pprovider", "program",
+        fields = ("id", "url", "creator", 'creator_id', "pprovider", "daily_program",
                   "title", "description", "city", "mac_addr", "net_addr", "p_addr",
                   "lat", "long", "created_at", "updated_at")
 
-        read_only_fields = ("id", "url", "creator", 'creator_id',
+        read_only_fields = ("id", "url", "creator", 'creator_id', "pprovider",
                             "created_at", "updated_at")
 
         required_fields = ("title", "description", "mac_addr")
@@ -33,6 +33,16 @@ class StationSerializer(serializers.HyperlinkedModelSerializer):
             raise serializers.ValidationError(
                 ("You can not create services for another user"))
         return value
+
+    def update(self, instance, validated_data):
+        if not instance.daily_program:
+            daily_program = super().update(instance, validated_data)
+        else:
+            if len(Station.objects.filter(daily_program=instance.daily_program)) == 1:
+                instance.daily_program.is_in_use = False
+                instance.daily_program.save()
+            daily_program = super().update(instance, validated_data)
+        return daily_program
 
 
 class StationLocationSerializer(serializers.ModelSerializer):

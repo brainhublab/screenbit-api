@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     "clients",
     "ads",
     "programs",
+    "daily_programs",
 
     # auth
     'oauth2_provider',

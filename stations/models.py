@@ -1,10 +1,8 @@
 """Models"""
-from django.db.models.signals import post_save, pre_delete
-from django.dispatch import receiver
 from django.db import models
 from authentication.models import User
 from pproviders.models import Pprovider
-from daily_programs.models import DailyProgram
+from programs.models import Program
 from django.utils.translation import ugettext as _
 
 
@@ -24,11 +22,7 @@ class Station(models.Model):
         on_delete=models.SET_NULL,
         related_name='Station')
 
-    daily_program = models.ForeignKey(
-        DailyProgram,
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name='Station')
+    programs = models.ManyToManyField(Program, through="StationProgramRelation")
 
     title = models.TextField(max_length=60, blank=False)
     description = models.TextField(max_length=300, blank=False)
@@ -64,19 +58,69 @@ class Station(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-@receiver(post_save, sender=Station)
-def set_daily_program_in_use_on_save(sender, instance, **kwargs):
-    if instance.daily_program:
-        instance.daily_program.is_in_use = True
-        instance.daily_program.save()
+class StationProgramRelation(models.Model):
 
+    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='stprrelation')
+    station = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='stprrelation')
 
-@receiver(pre_delete, sender=Station)
-def set_daily_program_in_use_on_delete(sender, instance, **kwargs):
-    if instance.daily_program:
-        if len(Station.objects.filter(daily_program=instance.daily_program)) == 1:
-            instance.daily_program.is_in_use = False
-            instance.daily_program.save()
-    return {
-        "message": "Ok"
-    }
+    TWELVE_AM = "00"
+    ОNЕ_AM = "01"
+    TWO_AM = "02"
+    THREE_AM = "03"
+    FOUR_AM = "04"
+    FIVE_AM = "05"
+    SIX_AM = "06"
+    SEVEN_AM = "07"
+    EIGHT_AM = "08"
+    NINE_AM = "09"
+    TEN_AM = "10"
+    ELEVEN_AM = "11"
+    TWELVE_PM = "12"
+    ОНЕ_PM = "13"
+    TWO_PM = "14"
+    THREE_PM = "15"
+    FOUR_PM = "16"
+    FIVE_PM = "17"
+    SIX_PM = "18"
+    SEVEN_PM = "19"
+    EIGHT_PM = "20"
+    NINE_PM = "21"
+    TEN_PM = "22"
+    ELEVEN_PM = "23"
+    HOURS = [
+        (TWELVE_AM, "TWELVE AM"),
+        (ОNЕ_AM, "ОNЕ AM"),
+        (TWO_AM, "TWO AM"),
+        (THREE_AM, "THREE AM"),
+        (FOUR_AM, "FOUR AM"),
+        (FIVE_AM, "FIVE AM"),
+        (SIX_AM, "SIX AM"),
+        (SEVEN_AM, "SEVEN AM"),
+        (EIGHT_AM, "EIGHT AM"),
+        (NINE_AM, "NINE AM"),
+        (TEN_AM, "TEN AM"),
+        (ELEVEN_AM, "ELEVEN AM"),
+        (TWELVE_PM, "TWELVE PM"),
+        (ОНЕ_PM, "ОНЕ PM"),
+        (TWO_PM, "TWO PM"),
+        (THREE_PM, "THREE PM"),
+        (FOUR_PM, "FOUR PM"),
+        (FIVE_PM, "FIVE PM"),
+        (SIX_PM, "SIX PM"),
+        (SEVEN_PM, "SEVEN PM"),
+        (EIGHT_PM, "EIGHT PM"),
+        (NINE_PM, "NINE PM"),
+        (TEN_PM, "TEN PM"),
+        (ELEVEN_PM, "ELEVEN PM")
+
+    ]
+    hour = models.CharField(
+        max_length=2,
+        choices=HOURS,
+        null=True,
+        default="00")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ("station", "hour",)

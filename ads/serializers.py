@@ -73,10 +73,10 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
 
 
 def is_ext_approved(media_file):
-    global_variable = settings.GLOBAL_VARIABLE
-    if media_file["media_file"].name.split(".")[-1] in global_variable["approved_video_ext"]:
+    global_variables = settings.GLOBAL_VARIABLE
+    if media_file["media_file"].name.split(".")[-1] in global_variables[0]["approved_video_ext"]:
         return "VD"
-    elif media_file["media_file"].name.split(".")[-1] in global_variable["approved_image_ext"]:
+    elif media_file["media_file"].name.split(".")[-1] in global_variables[0]["approved_image_ext"]:
         return "IM"
     else:
         raise serializers.ValidationError({"message": "Unsupported file extension"})

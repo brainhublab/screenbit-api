@@ -42,7 +42,6 @@ class ProgramSerializer(serializers.HyperlinkedModelSerializer):
         else:
             for key in ad_order_schema:
                 get_object_or_404(Ad, id=ad_order_schema[key])
-
         return ad_order_schema
 
     def create(self, validated_data):

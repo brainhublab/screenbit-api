@@ -3,7 +3,6 @@ from .serializers import AdSerializer
 from screenbit_core.permissions import IsAdminUserOrReadOnly
 
 from rest_framework import viewsets, filters, serializers
-from django.db.models import Q
 from django_filters import rest_framework as django_rest_filters
 from django.core.exceptions import PermissionDenied
 
@@ -31,14 +30,15 @@ class AdViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         used_in = []
         for related_program in instance.program_set.all():
-            daily_programs = related_program.dailyprmembership.all()
-            for related_daily in daily_programs:
-                print(related_daily.daily_program.is_in_use)
-                if related_daily.daily_program.is_in_use:
-                    used_in.append(related_daily.daily_program.id)
-        print(used_in)
+            ProgramStationRelations = related_program.stprrelation.all()
+            for relation in ProgramStationRelations:
+                relation_info = {
+                    "program": relation.program,
+                    "station": relation.station
+                }
+                used_in.append(relation_info)
         if len(used_in) > 0:
             raise serializers.ValidationError({"message": "Ad is used in activ advertismen",
-                                              "used_in": used_in})
+                                               "used_in": used_in})
         else:
             return super(AdViewSet, self).destroy(request, *args, **kwargs)

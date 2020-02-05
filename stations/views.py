@@ -1,9 +1,10 @@
 from .models import Station
 from programs.models import ProgramAdMembership
 from .serializers import StationSerializer, StationLocationSerializer
+from clients.models import Client
+
 from screenbit_core.permissions import IsAdminUserOrReadOnly
 from settings.local_settings import MEDIA_URL
-
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets, filters, serializers
@@ -13,6 +14,8 @@ from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from django.core.exceptions import PermissionDenied
 from django_filters import rest_framework as django_rest_filters
+
+global_variables = settings.GLOBAL_VARIABLE[0]
 
 
 class StationViewSet(viewsets.ModelViewSet):
@@ -37,16 +40,18 @@ class StationViewSet(viewsets.ModelViewSet):
     def filter_statoins_queryset(self, queryset, request):
         """Filter stations by title or citi or place provider"""
         query = request.GET.get('search')
-        query = request.GET.get('title')
-        query = request.GET.get('citi')
+        title = request.GET.get('title')
+        citi = request.GET.get('citi')
+        client = request.GET.get('client')
+        if client:
+            client = Client.objects.filter(user=client_id)
         queryset = queryset.all()
         condition = Q()
 
         if query:
             q_condition = Q()
-            q_condition.add(Q(title__icontains=query), Q.OR)
-            q_condition.add(Q(title__icontains=query), Q.OR)
-            q_condition.add(Q(citi__icontains=query), Q.OR)
+            q_condition.add(Q(title__icontains=title), Q.OR)
+            q_condition.add(Q(citi__icontains=citi), Q.OR)
             condition.add(q_condition, Q.AND)
         return queryset.filter(condition).distinct()
 
@@ -55,8 +60,7 @@ class StationViewSet(viewsets.ModelViewSet):
         """ Function for filtering stations that are free for hours list """
         if "hours" not in request.data:
             return Response({"message": "Bad request"}, 400)
-        global_variables = settings.GLOBAL_VARIABLE
-        available_ext = all(elem in global_variables[0]["available_hours_choices"] for elem in request.data["hours"])
+        available_ext = all(elem in global_variables["available_hours_choices"] for elem in request.data["hours"])
         if available_ext:
             busy_stations = Station.objects.filter(stprrelation__hour__in=request.data["hours"])
             free_stations = Station.objects.exclude(id__in=busy_stations)
@@ -74,13 +78,19 @@ class StationViewSet(viewsets.ModelViewSet):
             mac_addr = int(params["mac_addr"])
             station = get_object_or_404(Station, mac_addr=mac_addr)
         elif "id" in params:
+            """ Get program by id for development """
             id = int(params["id"])
             station = get_object_or_404(Station, id=id)
         else:
             raise serializers.ValidationError({"message": "Missing parameter"})
 
         if station.programs is not None:
-            related_programs = station.stprrelation.all().order_by("-hour")
+            if "hour" in params:
+                if params["hour"] not in global_variables["available_hours_choices"]:
+                    return Response({"message": "Bad Request"}, 409)
+                related_programs = station.stprrelation.filter(hour=params["hour"])
+            else:
+                related_programs = station.stprrelation.all().order_by("-hour")
             media_data = {}
             for relation in related_programs:
                 media_data[relation.hour] = {}

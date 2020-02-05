@@ -255,7 +255,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
 # use Accept-Language Header (i.e. 'ru-ru', 'es-es', 'en-US', 'bg')
-LANGUAGE_CODE = 'en-US'
+LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Europe/Sofia'
 USE_I18N = True
 USE_L10N = True

@@ -4,6 +4,8 @@ from programs.models import Program
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 
+global_variables = settings.GLOBAL_VARIABLE[0]
+
 
 class StationSerializer(serializers.HyperlinkedModelSerializer):
     """Station serializer"""
@@ -39,13 +41,12 @@ class StationSerializer(serializers.HyperlinkedModelSerializer):
         return value
 
     def _custom_relations_schema_validator(self):
-        global_variables = settings.GLOBAL_VARIABLE
         request_data = self.context.get("request").data
         if "relations_schema" in request_data:
             relations_schema = request_data["relations_schema"]
             if relations_schema is not None:
                 for hour in relations_schema:
-                    if hour not in global_variables[0]["available_hours_choices"]:
+                    if hour not in global_variables["available_hours_choices"]:
                         raise serializers.ValidationError({"message": "Unavailable key in relations_schema"})
                     get_object_or_404(Program, id=relations_schema[hour])
         if "programs" in request_data:

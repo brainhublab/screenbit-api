@@ -28,6 +28,7 @@ ENV screenbit_ENV=development
 
 COPY . /usr/src/screenbitApi
 
-RUN chmod +x ./run.sh
+RUN apk add --no-cache tzdata
+ENV TZ Europe/Sofia
 
 CMD ./run.sh

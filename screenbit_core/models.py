@@ -3,7 +3,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
-from django.utils import timezone
 
 from screenbit_core.images_compression import compress_image
 
@@ -52,7 +51,7 @@ class File(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey()
 
-    file = models.FileField(upload_to='msgfiles/%Y/%m/%d')
+    file = models.FileField(upload_to='files/%Y/%m/%d')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

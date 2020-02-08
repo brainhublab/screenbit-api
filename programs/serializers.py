@@ -13,7 +13,7 @@ class ProgramSerializer(serializers.HyperlinkedModelSerializer):
                   "ad_members", "created_at", "updated_at")
         read_only_fields = ("id", "url", "creator", "creator_id",
                             "created_at", "updated_at")
-        required_fields = ("client", "title", "description")
+        required_fields = ("title", "description")
         extra_kwargs = {field: {"required": True} for field in required_fields}
 
     def get_current_user(self):
@@ -64,6 +64,14 @@ class ProgramSerializer(serializers.HyperlinkedModelSerializer):
                                 program=program,
                                 ad_index=int(key)).save()
         return program
+
+    def to_representation(self, instance, override=True):
+        ads = {}
+        for relation in instance.pradmembership.all():
+            ads[relation.ad_index] = relation.ad.id
+        response = super().to_representation(instance)
+        response["ad_order"] = ads
+        return response
 
 
 class ProgramAdMembershipSerializer(serializers.HyperlinkedModelSerializer):

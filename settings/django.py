@@ -67,8 +67,8 @@ INSTALLED_APPS = [
 
     # added
     "stations",
-    "pproviders",
-    "clients",
+    # "pproviders",
+    # "clients",
     "ads",
     "programs",
 

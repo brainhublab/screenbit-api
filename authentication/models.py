@@ -82,6 +82,7 @@ class User(AbstractUser):
 
     bio = models.TextField(max_length=500, blank=True, null=True)
     phone = models.TextField(max_length=100, blank=True, null=True)
+    is_admin = models.BooleanField(default=False)
 
     def upload_to(instance, filename):
         """

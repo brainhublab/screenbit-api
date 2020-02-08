@@ -64,4 +64,3 @@ class IsOwnerOrReadOnly(IsOwner):
             return True
 
         return super(IsOwnerOrReadOnly, self).has_object_permission(request, view, obj)
-

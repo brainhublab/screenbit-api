@@ -1,9 +1,8 @@
 from .models import Station
 from programs.models import ProgramAdMembership
 from .serializers import StationSerializer, StationLocationSerializer
-from clients.models import Client
 
-from screenbit_core.permissions import IsAdminUserOrReadOnly
+from .permissions import IsAdminUser
 from settings.local_settings import MEDIA_URL
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -24,11 +23,9 @@ class StationViewSet(viewsets.ModelViewSet):
     """
     queryset = Station.objects.all()
     serializer_class = StationSerializer
-    permission_classes = (IsAdminUserOrReadOnly, )
+    permission_classes = (IsAdminUser, )
     filter_backends = (filters.SearchFilter,
                        django_rest_filters.DjangoFilterBackend, )
-    search_fields = ["title", "city", "pprovider"]
-    filterset_fields = ["creator_id", "city", "pprovider", "mac_addr"]
 
     def perform_create(self, serializer):
         """Add user that make request to serializer data"""
@@ -38,38 +35,60 @@ class StationViewSet(viewsets.ModelViewSet):
             raise PermissionDenied()
 
     def filter_statoins_queryset(self, queryset, request):
-        """Filter stations by title or citi or place provider"""
-        query = request.GET.get('search')
-        title = request.GET.get('title')
-        citi = request.GET.get('citi')
-        client = request.GET.get('client')
-        if client:
-            client = Client.objects.filter(user=client_id)
+        """Filter stations by by free hours, title, city"""
+
         queryset = queryset.all()
-        condition = Q()
+        hours_condition = Q()
+        if "free_hours" in request.data:
+            hours_condition.add(Q(stprrelation__hour__in=request.data["free_hours"]), Q.AND)
+            queryset = queryset.exclude(hours_condition)
 
-        if query:
-            q_condition = Q()
-            q_condition.add(Q(title__icontains=title), Q.OR)
-            q_condition.add(Q(citi__icontains=citi), Q.OR)
-            condition.add(q_condition, Q.AND)
-        return queryset.filter(condition).distinct()
+        elif "busy_hours" in request.data:
+            hours_condition.add(Q(stprrelation__hour__in=request.data["busy_hours"]), Q.AND)
+            queryset = queryset.filter(hours_condition)
 
-    @action(detail=False, methods=['get'])
-    def free_stations(self, request):
-        """ Function for filtering stations that are free for hours list """
-        if "hours" not in request.data:
-            return Response({"message": "Bad request"}, 400)
-        available_ext = all(elem in global_variables["available_hours_choices"] for elem in request.data["hours"])
-        if available_ext:
-            busy_stations = Station.objects.filter(stprrelation__hour__in=request.data["hours"])
-            free_stations = Station.objects.exclude(id__in=busy_stations)
+        another_conditions = Q()
 
-            serializer = self.serializer_class(
-                instance=free_stations, many=True, context={'request': request})
-            return Response(serializer.data)
-        else:
+        title = request.GET.get('title')
+        if title:
+            another_conditions.add(Q(title__icontains=title), Q.OR)
+
+        description = request.GET.get('description')
+        if description:
+            another_conditions.add(Q(description__icontains=description), Q.OR)
+
+        city = request.GET.get('city')
+        if city:
+            another_conditions.add(Q(city__icontains=city), Q.OR)
+
+        mac_addr = request.GET.get('mac_addr')
+        if city:
+            another_conditions.add(Q(mac_addr__icontains=mac_addr), Q.OR)
+
+        net_addr = request.GET.get('net_addr')
+        if net_addr:
+            another_conditions.add(Q(net_addr__icontains=net_addr), Q.OR)
+
+        p_addr = request.GET.get('p_addr')
+        if city:
+            another_conditions.add(Q(p_addr__icontains=p_addr), Q.OR)
+
+        return queryset.filter(another_conditions)
+
+    def list(self, request):
+        """Custom list processing"""
+        hours_data = []
+        if "free_hours" in request.data:
+            hours_data = request.data["free_hours"]
+        elif "busy_hours" in request.data:
+            hours_data = request.data["busy_hours"]
+
+        if not all(elem in global_variables["available_hours_choices"] for elem in hours_data):
             return Response({"message": "Bad Request"}, 400)
+
+        stations = self.filter_statoins_queryset(self.queryset, request)
+        serializer = self.serializer_class(stations, many=True, context={'request': request})
+        return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
     def media(self, request):

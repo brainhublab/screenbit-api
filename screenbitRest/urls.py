@@ -21,7 +21,6 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 
-from rest_framework import routers
 from rest_framework.schemas import get_schema_view
 
 import screenbit_core.urls
@@ -29,8 +28,6 @@ import authentication.urls
 import public_configs.urls
 
 import stations.urls
-import pproviders.urls
-import clients.urls
 import ads.urls
 import programs.urls
 
@@ -48,8 +45,6 @@ urlpatterns = [
         url(r'', include(authentication.urls)),
         url(r'', include(public_configs.urls)),
         url(r'', include(stations.urls)),
-        url(r'', include(pproviders.urls)),
-        url(r'', include(clients.urls)),
         url(r'', include(ads.urls)),
         url(r'', include(programs.urls)),
         url(r'auth/registration/',

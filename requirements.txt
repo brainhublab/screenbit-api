@@ -33,6 +33,7 @@ django-rest-coreapi-schema==0.1.2
 django-rest-framework-social-oauth2==1.1.0
 django-sslserver==0.20
 djangorestframework==3.9.0
+djangorestframework-api-key==1.4.1
 dnspython==1.15.0
 ecdsa==0.13
 eventlet==0.24.1

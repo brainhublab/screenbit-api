@@ -10,12 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
-# from .local_settings import EMAIL_HOST_PASSWORD, EMAIL_HOST_USER
-from .local_settings import FACEBOOK_APP_ID, FACEBOOK_APP_SECRET
-from .local_settings import SOCIAL_AUTH_GOOGLE_OAUTH2_KEY, SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
-from .local_settings import SECRET_KEY
 import os
-from .local_settings import DB_CONFIG
+import settings.local_settings as local_settings
+from .local_settings import DB_CONFIG, SECRET_KEY, \
+                SOCIAL_AUTH_GOOGLE_OAUTH2_KEY,\
+                SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET, \
+                FACEBOOK_APP_ID, FACEBOOK_APP_SECRET
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -58,6 +58,7 @@ INSTALLED_APPS = [
 
     # api
     'rest_framework',
+    'rest_framework_api_key',
     'rest_framework.authtoken',
     'screenbit_core',
     'screenbitRest',
@@ -67,10 +68,10 @@ INSTALLED_APPS = [
 
     # added
     "stations",
-    # "pproviders",
-    # "clients",
+    "station_auth",
     "ads",
     "programs",
+    "feedbacks",
 
     # auth
     'oauth2_provider',

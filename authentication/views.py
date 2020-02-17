@@ -1,13 +1,12 @@
 """
 Views auth & users
 """
-from rest_auth.registration.views import RegisterView
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from screenbit_core.permissions import IsOwnerOrReadOnly
-from rest_framework.permissions import IsAuthenticated
+from rest_framework_api_key.permissions import HasAPIKey
 
 from .models import User
 from .serializers import UserSerializer, PrivateUserSerializer
@@ -19,7 +18,8 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.order_by('-date_joined')
     serializer_class = UserSerializer
-    permission_classes = (IsOwnerOrReadOnly, IsAuthenticated)
+
+    permission_classes = [HasAPIKey | IsOwnerOrReadOnly]
 
     def get_serializer(self, *args, **kwargs):
         """

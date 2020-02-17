@@ -7,6 +7,7 @@ from rest_framework import viewsets, filters, serializers
 from django.db.models import Q
 from django_filters import rest_framework as django_rest_filters
 from django.core.exceptions import PermissionDenied
+from rest_framework_api_key.permissions import HasAPIKey
 
 
 class ProgramViewSet(viewsets.ModelViewSet):
@@ -15,11 +16,10 @@ class ProgramViewSet(viewsets.ModelViewSet):
     """
     queryset = Program.objects.all()
     serializer_class = ProgramSerializer
-    permission_classes = (IsAdminUser, )
+    permission_classes = [HasAPIKey | IsAdminUser]
+
     filter_backends = (filters.SearchFilter,
                        django_rest_filters.DjangoFilterBackend, )
-
-    search_fields = ["title", "description"]
 
     def perform_create(self, serializer):
         """Add user that make request to serializer data"""

@@ -90,7 +90,7 @@ class StationSerializer(serializers.HyperlinkedModelSerializer):
         response["hours"] = programs
         return response
 
-    """short data represent """
+    # """short data represent """
     # def to_representation(self, instance, override=True):
     #     programs = {}
     #     for relation in instance.stprrelation.all():

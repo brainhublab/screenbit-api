@@ -7,6 +7,8 @@ from django_filters import rest_framework as django_rest_filters
 from django.core.exceptions import PermissionDenied
 from rest_framework.response import Response
 
+from rest_framework_api_key.permissions import HasAPIKey
+
 
 class AdViewSet(viewsets.ModelViewSet):
     """
@@ -14,11 +16,9 @@ class AdViewSet(viewsets.ModelViewSet):
     """
     queryset = Ad.objects.order_by('-created_at')
     serializer_class = AdSerializer
-    permission_classes = (IsAdminUserOrOwner, )
+    permission_classes = [HasAPIKey | IsAdminUserOrOwner]
     filter_backends = (filters.SearchFilter,
                        django_rest_filters.DjangoFilterBackend, )
-    search_fields = ["title", "description"]
-    filterset_fields = ["creator_id", "media_type"]
 
     def perform_create(self, serializer):
         """Add user that make request to serializer data"""

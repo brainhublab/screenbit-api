@@ -3,6 +3,7 @@ from programs.models import ProgramAdMembership
 from .serializers import StationSerializer, StationLocationSerializer
 
 from .permissions import IsAdminUser
+from rest_framework_api_key.permissions import HasAPIKey
 from settings.local_settings import MEDIA_URL
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -23,12 +24,13 @@ class StationViewSet(viewsets.ModelViewSet):
     """
     queryset = Station.objects.all()
     serializer_class = StationSerializer
-    permission_classes = (IsAdminUser, )
+    permission_classes = [HasAPIKey | IsAdminUser]
     filter_backends = (filters.SearchFilter,
                        django_rest_filters.DjangoFilterBackend, )
 
     def perform_create(self, serializer):
         """Add user that make request to serializer data"""
+        print(dir(self.request))
         if self.request.user:
             serializer.save(creator=self.request.user)
         else:
@@ -62,7 +64,7 @@ class StationViewSet(viewsets.ModelViewSet):
             another_conditions.add(Q(city__icontains=city), Q.OR)
 
         mac_addr = request.GET.get('mac_addr')
-        if city:
+        if mac_addr:
             another_conditions.add(Q(mac_addr__icontains=mac_addr), Q.OR)
 
         net_addr = request.GET.get('net_addr')
@@ -70,7 +72,7 @@ class StationViewSet(viewsets.ModelViewSet):
             another_conditions.add(Q(net_addr__icontains=net_addr), Q.OR)
 
         p_addr = request.GET.get('p_addr')
-        if city:
+        if p_addr:
             another_conditions.add(Q(p_addr__icontains=p_addr), Q.OR)
 
         return queryset.filter(another_conditions)
@@ -90,7 +92,7 @@ class StationViewSet(viewsets.ModelViewSet):
         serializer = self.serializer_class(stations, many=True, context={'request': request})
         return Response(serializer.data)
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, permission_classes=[], methods=['get'])
     def media(self, request):
         params = self.request.query_params
         if "mac_addr" in params:

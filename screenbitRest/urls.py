@@ -30,6 +30,7 @@ import public_configs.urls
 import stations.urls
 import ads.urls
 import programs.urls
+import feedbacks.urls
 
 
 schema_view = get_schema_view(title='Pastebin API')
@@ -47,6 +48,7 @@ urlpatterns = [
         url(r'', include(stations.urls)),
         url(r'', include(ads.urls)),
         url(r'', include(programs.urls)),
+        url(r'', include(feedbacks.urls)),
         url(r'auth/registration/',
             include('rest_auth.registration.urls')),
         url(r'^auth/account-confirm-email/(?P<key>[-:\w]+)/$', allauthemailconfirmation,

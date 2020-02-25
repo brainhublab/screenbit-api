@@ -1,12 +1,7 @@
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
-
 from django.conf.urls import url
-
 from messaging.consumers import ChatConsumer
-
-from channels.auth import AuthMiddlewareStack
-# from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import AnonymousUser
 
 from oauth2_provider.models import AccessToken
@@ -31,7 +26,6 @@ class TokenAuthMiddleware:
             except AccessToken.DoesNotExist:
                 scope['user'] = AnonymousUser()
         return self.inner(scope)
-
 
 
 TokenAuthMiddlewareStack = lambda inner: TokenAuthMiddleware(AuthMiddlewareStack(inner))

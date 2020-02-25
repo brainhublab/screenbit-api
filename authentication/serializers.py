@@ -14,6 +14,7 @@ class CustomRegisterSerializer(RegisterSerializer):
     password1 = serializers.CharField(write_only=True)
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
+    organization = serializers.CharField(max_length=60, allow_blank=True)
 
     bio = serializers.CharField(
         max_length=500, required=False, allow_blank=True)
@@ -33,6 +34,7 @@ class CustomRegisterSerializer(RegisterSerializer):
             password=validated_data['password'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
+            organization=validated_data['organization'],
             phone=validated_data['phone'],
             bio=validated_data['bio'],
             country_id=validated_data['country_id'],

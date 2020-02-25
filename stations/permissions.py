@@ -1,17 +1,20 @@
 from rest_framework import permissions
+from .models import Station
 
-from .models import Screen
 
-
-class IsOwner(permissions.BasePermission):
+class IsAdminUser(permissions.BasePermission):
     def has_permission(self, request, view):
-        # TODO
-        return True
+        if not request.user.is_authenticated:
+            return False
+        if request.user.is_admin:
+            return True
+        return False
 
     def has_object_permission(self, request, view, obj):
         # Read permissions are allowed to any request,
         # so we'll always allow GET, HEAD or OPTIONS requests.
-        if isinstance(obj, Screen):
-            return obj.owner.id == request.user.id
-        # no.
-        return False
+        if isinstance(obj, Station):
+            if request.user.is_admin:
+                return True
+            else:
+                return False

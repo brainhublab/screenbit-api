@@ -1,7 +1,9 @@
 """Models"""
 from django.db import models
 
-from authentication.models import User
+from stations.models import Station
+from programs.models import Program
+from ads.models import Ad
 from django.utils.translation import ugettext as _
 
 
@@ -9,20 +11,26 @@ class Feedback(models.Model):
     """
     Feedback Model
     """
-    creator = models.ForeignKey(
-        User,
+    station = models.ForeignKey(
+        Station,
+        null=False,
+        on_delete=models.CASCADE,
+        related_name='Feedback')
+
+    program = models.ForeignKey(
+        Program,
         null=False,
         on_delete=models.CASCADE,
         related_name='Feedback')
 
     ad = models.ForeignKey(
-        User,
+        Ad,
         null=False,
         on_delete=models.CASCADE,
         related_name='Feedback')
 
-    qr_users = models.Integer()
-    viewers = models.Integer()
+    """ Duration will be stored as seconds """
+    duration = models.IntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -1,7 +1,6 @@
 """Models"""
 from django.db import models
 from authentication.models import User
-from clients.models import Client
 from django.utils.translation import ugettext as _
 from django.contrib.contenttypes.fields import GenericRelation
 from screenbit_core.models import File
@@ -15,12 +14,6 @@ class Ad(models.Model):
         User,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='Ad')
-
-    client = models.ForeignKey(
-        Client,
-        null=True,
-        on_delete=models.CASCADE,
         related_name='Ad')
 
     title = models.TextField(max_length=60, null=False, blank=False)

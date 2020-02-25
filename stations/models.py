@@ -1,7 +1,6 @@
 """Models"""
 from django.db import models
 from authentication.models import User
-from pproviders.models import Pprovider
 from programs.models import Program
 from django.utils.translation import ugettext as _
 
@@ -17,10 +16,10 @@ class Station(models.Model):
         related_name='Station')
 
     pprovider = models.ForeignKey(
-        Pprovider,
+        User,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='Station')
+        related_name='StationPlaceProvider')
 
     programs = models.ManyToManyField(Program, through="StationProgramRelation")
 

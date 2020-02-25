@@ -17,7 +17,7 @@ class StationSerializer(serializers.HyperlinkedModelSerializer):
                   "mac_addr", "net_addr", "p_addr",
                   "lat", "long", "created_at", "updated_at")
 
-        read_only_fields = ("id", "url", "creator", 'creator_id', "pprovider",
+        read_only_fields = ("id", "url", "creator", 'creator_id',
                             "created_at", "updated_at")
 
         required_fields = ("title", "description", "mac_addr")
@@ -71,11 +71,34 @@ class StationSerializer(serializers.HyperlinkedModelSerializer):
         else:
             instance.programs.clear()
             for hour in request_data["relations_schema"]:
-
                 StationProgramRelation(program=Program.objects.get(id=request_data["relations_schema"][hour]),
                                        station=station,
                                        hour=hour).save()
         return station
+
+    """ Full data represent """
+    def to_representation(self, instance, override=True):
+        programs = {}
+        for relation in instance.stprrelation.all():
+            programs[relation.hour] = {}
+            programs[relation.hour]["program_id"] = relation.program.id
+            ads_relations = {}
+            for program_relation in relation.program.pradmembership.all():
+                ads_relations[program_relation.ad_index] = program_relation.ad.id
+            programs[relation.hour]["program_ads"] = ads_relations
+        response = super().to_representation(instance)
+        response["hours"] = programs
+        return response
+
+    # """short data represent """
+    # def to_representation(self, instance, override=True):
+    #     programs = {}
+    #     for relation in instance.stprrelation.all():
+    #         programs[relation.hour] = relation.program.id
+    #
+    #     response = super().to_representation(instance)
+    #     response["hours"] = programs
+    #     return response
 
 
 class StationLocationSerializer(serializers.ModelSerializer):

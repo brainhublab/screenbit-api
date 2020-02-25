@@ -15,12 +15,12 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Ad
-        fields = ("id", "url", "creator", "creator_id", "client", "client_id",
+        fields = ("id", "url", "creator", "creator_id",
                   "title", "description", "file", "media_type",
                   "created_at", "updated_at")
-        read_only_fields = ("id", "creator", "creator_id", "client_id",
+        read_only_fields = ("id", "creator", "creator_id",
                             "url", "created_at", "updated_at", "file", "media_type")
-        required_fields = ("client" "title", "description")
+        required_fields = ("title", "description")
         extra_kwargs = {field: {"required": True} for field in required_fields}
 
     def get_current_user(self):
@@ -70,6 +70,18 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
         for file in media_file.values():
             file = File.objects.create(content_object=ad_data, file=file)
         return ad_data
+
+    def to_representation(self, instance, override=True):
+        ads = {}
+        for relation in instance.pradmembership.all():
+            ads[relation.program.id] = {"stations": []}
+
+            for program_relation in relation.program.stprrelation.all():
+                ads[relation.program.id]["stations"].append({"id": program_relation.station.id,
+                                                             "hour": program_relation.hour})
+        response = super().to_representation(instance)
+        response["programs"] = ads
+        return response
 
 
 def is_ext_approved(media_file):

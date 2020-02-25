@@ -25,6 +25,8 @@ SECRET_KEY = '{}'.format(API_SECRET_KEY)
 API_CLIENT_ID = os.environ.get('API_CLIENT_ID')
 API_CLIENT_SECRET = os.environ.get('API_CLIENT_SECRET')
 
+# screen authentication needs
+SCREEN_TOKEN_KEY_WORD = os.environ.get('SCREEN_TOKEN_KEY_WORD')
 
 RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST')
 RABBITMQ_PORT = os.environ.get('RABBITMQ_PORT')

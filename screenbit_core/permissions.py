@@ -1,10 +1,22 @@
 from rest_framework import permissions
-# from django.contrib.auth.models import User
-
+import settings
+import importlib
 
 from authentication.models import User
 
 from screenbit_core.models import Image, File
+
+
+def load(path):
+    parts = path.split('.')
+    class_name = parts.pop()
+    module_name = '.'.join(parts)
+    module = importlib.import_module(module_name)
+    class_ = getattr(module, class_name)
+    return class_
+
+
+DEFAULT_PERMISSION_CLASSES = list(map(load, settings.REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES']))
 
 
 class IsAdminUserOrReadOnly(permissions.IsAdminUser):
@@ -64,4 +76,3 @@ class IsOwnerOrReadOnly(IsOwner):
             return True
 
         return super(IsOwnerOrReadOnly, self).has_object_permission(request, view, obj)
-

@@ -23,26 +23,22 @@ class FeedbackViewSet(viewsets.ModelViewSet):
         conditions = Q()
 
         ad_id = request.GET.get("ad_id")
+        station_id = request.GET.get("station_id")
+        ex_duration = request.GET.get('ex_duration')
+        gte_duration = request.GET.get('gte_duration')
+        lte_duration = request.GET.get('lte_duration')
+
         if ad_id:
             conditions.add(Q(ad_id=ad_id), Q.OR)
-
-        min_duration = request.GET.get("min_duration")
-        max_duration = request.GET.get("max_duration")
-        if min_duration and min_duration:
-            conditions.add(Q(duration__range=(min_duration, max_duration)), Q.OR)
+        if station_id:
+            conditions.add(Q(station_id=station_id), Q.OR)
+        if ex_duration:
+            conditions.add(Q(duration=ex_duration), Q.OR)
         else:
-            gte_duration = request.GET.get('gte_duration')
             if gte_duration:
-                conditions.add(Q(duration__gte=gte_duration), Q.OR)
-
-            lte_duration = request.GET.get('lte_duration')
+                conditions.add(Q(duration__gte=gte_duration), Q.AND)
             if lte_duration:
-                conditions.add(Q(duration__lte=lte_duration), Q.OR)
-
-            ex_duration = request.GET.get('ex_duration')
-            if ex_duration:
-                conditions.add(Q(duration=ex_duration), Q.OR)
-
+                conditions.add(Q(duration__lte=lte_duration), Q.AND)
         return queryset.filter(conditions)
 
     def list(self, request):

@@ -68,60 +68,9 @@ class StationProgramRelation(models.Model):
     program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='stprrelation')
     station = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='stprrelation')
 
-    TWELVE_AM = "00"
-    ОNЕ_AM = "01"
-    TWO_AM = "02"
-    THREE_AM = "03"
-    FOUR_AM = "04"
-    FIVE_AM = "05"
-    SIX_AM = "06"
-    SEVEN_AM = "07"
-    EIGHT_AM = "08"
-    NINE_AM = "09"
-    TEN_AM = "10"
-    ELEVEN_AM = "11"
-    TWELVE_PM = "12"
-    ОНЕ_PM = "13"
-    TWO_PM = "14"
-    THREE_PM = "15"
-    FOUR_PM = "16"
-    FIVE_PM = "17"
-    SIX_PM = "18"
-    SEVEN_PM = "19"
-    EIGHT_PM = "20"
-    NINE_PM = "21"
-    TEN_PM = "22"
-    ELEVEN_PM = "23"
-    HOURS = [
-        (TWELVE_AM, "TWELVE AM"),
-        (ОNЕ_AM, "ОNЕ AM"),
-        (TWO_AM, "TWO AM"),
-        (THREE_AM, "THREE AM"),
-        (FOUR_AM, "FOUR AM"),
-        (FIVE_AM, "FIVE AM"),
-        (SIX_AM, "SIX AM"),
-        (SEVEN_AM, "SEVEN AM"),
-        (EIGHT_AM, "EIGHT AM"),
-        (NINE_AM, "NINE AM"),
-        (TEN_AM, "TEN AM"),
-        (ELEVEN_AM, "ELEVEN AM"),
-        (TWELVE_PM, "TWELVE PM"),
-        (ОНЕ_PM, "ОНЕ PM"),
-        (TWO_PM, "TWO PM"),
-        (THREE_PM, "THREE PM"),
-        (FOUR_PM, "FOUR PM"),
-        (FIVE_PM, "FIVE PM"),
-        (SIX_PM, "SIX PM"),
-        (SEVEN_PM, "SEVEN PM"),
-        (EIGHT_PM, "EIGHT PM"),
-        (NINE_PM, "NINE PM"),
-        (TEN_PM, "TEN PM"),
-        (ELEVEN_PM, "ELEVEN PM")
-
-    ]
     hour = models.CharField(
         max_length=2,
-        choices=HOURS,
+        choices=local_settings.HOURS,
         null=True,
         default="00")
     created_at = models.DateTimeField(auto_now_add=True)

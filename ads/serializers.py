@@ -5,6 +5,7 @@ from screenbit_core.models import File
 from screenbit_core.serializers import FileSerializer
 from django.conf import settings
 from django.db.models.query import QuerySet
+global_variables = settings.GLOBAL_VARIABLE[0]
 
 
 class AdSerializer(serializers.HyperlinkedModelSerializer):
@@ -39,17 +40,6 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
         if user != value:
             raise serializers.ValidationError("You can not create services for another user")
         return value
-
-    def validate_hours(self, value):
-        allowed_hours = ["00", "01", "02", "03", "04", "05",
-                         "06", "07", "08", "09", "10",
-                         "11", "12", "13", "14", "15", "16",
-                         "17", "18", "19", "20", "21", "22", "23"]
-        for hour in value:
-            if hour not in allowed_hours:
-                raise serializers.ValidationError("Bad haur value")
-        else:
-            return value
 
     def create(self, validated_data):
         """ Add file objects while advertising object is on create"""

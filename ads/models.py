@@ -5,7 +5,6 @@ from django.utils.translation import ugettext as _
 from django.contrib.contenttypes.fields import GenericRelation
 from screenbit_core.models import File
 from settings import local_settings
-from multiselectfield import MultiSelectField
 from django.contrib.postgres.fields import ArrayField
 
 
@@ -35,9 +34,11 @@ class Ad(models.Model):
         max_length=2,
         choices=MEDIA_TYPES,
         null=True)
-    areas = MultiSelectField(choices=local_settings.AREAS, null=True)
+    areas = ArrayField(
+            models.CharField(choices=local_settings.AREAS, max_length=4, null=True),
+            size=24, null=True)
     hours = ArrayField(
-            models.CharField(max_length=2, null=True),
+            models.CharField(choices=local_settings.HOURS, max_length=2, null=True),
             size=24, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)

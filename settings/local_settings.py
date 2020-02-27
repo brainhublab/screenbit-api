@@ -1,8 +1,9 @@
 import os
-from .areas import AREAS
+from .choices_data import AREAS
+from .choices_data import HOURS
 
 AREAS = AREAS
-
+HOURS = HOURS
 API_HOST = os.environ.get('SCREENBIT_API_HOST')
 API_PORT = os.environ.get('SCREENBIT_API_PORT')
 MEDIA_URL = os.environ.get('MEDIA_API_URL')

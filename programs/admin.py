@@ -4,7 +4,7 @@ from .models import Program, ProgramAdMembership
 
 @admin.register(Program)
 class ProgramAdmin(admin.ModelAdmin):
-    list_display = ("creator", "title", "description", "created_at", "updated_at")
+    list_display = ("id", "creator", "title", "description", "created_at", "updated_at")
     search_fields = ("=creator__id", "title", "description", )
 
 

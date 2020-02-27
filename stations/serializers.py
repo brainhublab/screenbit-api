@@ -3,6 +3,7 @@ from .models import Station, StationProgramRelation
 from programs.models import Program
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django.db.models.query import QuerySet
 
 global_variables = settings.GLOBAL_VARIABLE[0]
 
@@ -13,14 +14,14 @@ class StationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Station
         fields = ("id", "url", "creator", 'creator_id', "pprovider",
-                  "programs", "title", "description", "city",
+                  "programs", "title", "description", "city", "area",
                   "mac_addr", "net_addr", "p_addr",
                   "lat", "long", "created_at", "updated_at")
 
         read_only_fields = ("id", "url", "creator", 'creator_id',
                             "created_at", "updated_at")
 
-        required_fields = ("title", "description", "mac_addr")
+        required_fields = ("title", "description", "area", "mac_addr")
         extra_kwargs = {field: {"required": True} for field in required_fields}
 
     def get_current_user(self):
@@ -76,29 +77,19 @@ class StationSerializer(serializers.HyperlinkedModelSerializer):
                                        hour=hour).save()
         return station
 
-    """ Full data represent """
     def to_representation(self, instance, override=True):
-        programs = {}
-        for relation in instance.stprrelation.all():
-            programs[relation.hour] = {}
-            programs[relation.hour]["program_id"] = relation.program.id
-            ads_relations = {}
-            for program_relation in relation.program.pradmembership.all():
-                ads_relations[program_relation.ad_index] = program_relation.ad.id
-            programs[relation.hour]["program_ads"] = ads_relations
         response = super().to_representation(instance)
-        response["hours"] = programs
+        if not isinstance(self.instance, QuerySet):
+            programs = {}
+            for relation in instance.stprrelation.all():
+                programs[relation.hour] = {}
+                programs[relation.hour]["program_id"] = relation.program.id
+                ads_relations = {}
+                for program_relation in relation.program.pradmembership.all():
+                    ads_relations[program_relation.ad_index] = program_relation.ad.id
+                programs[relation.hour]["program_ads"] = ads_relations
+            response["hours"] = programs
         return response
-
-    # """short data represent """
-    # def to_representation(self, instance, override=True):
-    #     programs = {}
-    #     for relation in instance.stprrelation.all():
-    #         programs[relation.hour] = relation.program.id
-    #
-    #     response = super().to_representation(instance)
-    #     response["hours"] = programs
-    #     return response
 
 
 class StationLocationSerializer(serializers.ModelSerializer):

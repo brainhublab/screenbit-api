@@ -4,6 +4,7 @@ from .models import Ad
 from screenbit_core.models import File
 from screenbit_core.serializers import FileSerializer
 from django.conf import settings
+from django.db.models.query import QuerySet
 
 
 class AdSerializer(serializers.HyperlinkedModelSerializer):
@@ -16,11 +17,11 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Ad
         fields = ("id", "url", "creator", "creator_id",
-                  "title", "description", "file", "media_type",
+                  "title", "description", "file", "media_type", "areas", "hours",
                   "created_at", "updated_at")
         read_only_fields = ("id", "creator", "creator_id",
                             "url", "created_at", "updated_at", "file", "media_type")
-        required_fields = ("title", "description")
+        required_fields = ("title", "description", "areas", "hours")
         extra_kwargs = {field: {"required": True} for field in required_fields}
 
     def get_current_user(self):
@@ -38,6 +39,17 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
         if user != value:
             raise serializers.ValidationError("You can not create services for another user")
         return value
+
+    def validate_hours(self, value):
+        allowed_hours = ["00", "01", "02", "03", "04", "05",
+                         "06", "07", "08", "09", "10",
+                         "11", "12", "13", "14", "15", "16",
+                         "17", "18", "19", "20", "21", "22", "23"]
+        for hour in value:
+            if hour not in allowed_hours:
+                raise serializers.ValidationError("Bad haur value")
+        else:
+            return value
 
     def create(self, validated_data):
         """ Add file objects while advertising object is on create"""
@@ -72,15 +84,15 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
         return ad_data
 
     def to_representation(self, instance, override=True):
-        ads = {}
-        for relation in instance.pradmembership.all():
-            ads[relation.program.id] = {"stations": []}
-
-            for program_relation in relation.program.stprrelation.all():
-                ads[relation.program.id]["stations"].append({"id": program_relation.station.id,
-                                                             "hour": program_relation.hour})
         response = super().to_representation(instance)
-        response["programs"] = ads
+        if not isinstance(self.instance, QuerySet):
+            ads = {}
+            for relation in instance.pradmembership.all():
+                ads[relation.program.id] = {"stations": []}
+                for program_relation in relation.program.stprrelation.all():
+                    ads[relation.program.id]["stations"].append({"id": program_relation.station.id,
+                                                                 "hour": program_relation.hour})
+            response["programs"] = ads
         return response
 
 

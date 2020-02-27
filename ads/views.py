@@ -6,7 +6,8 @@ from django.db.models import Q
 from django_filters import rest_framework as django_rest_filters
 from django.core.exceptions import PermissionDenied
 from rest_framework.response import Response
-
+from rest_framework.decorators import action
+from settings import local_settings
 from rest_framework_api_key.permissions import HasAPIKey
 
 
@@ -14,7 +15,7 @@ class AdViewSet(viewsets.ModelViewSet):
     """
     Advertising viewset
     """
-    queryset = Ad.objects.order_by('-created_at')
+    queryset = Ad.objects.prefetch_related("pradmembership").order_by('-created_at')
     serializer_class = AdSerializer
     permission_classes = [HasAPIKey | IsAdminUserOrOwner]
     filter_backends = (filters.SearchFilter,
@@ -74,3 +75,11 @@ class AdViewSet(viewsets.ModelViewSet):
                                                "used_in": used_in})
         else:
             return super(AdViewSet, self).destroy(request, *args, **kwargs)
+
+    @action(detail=False, methods=['get'])
+    def areas(self, request):
+        """Action that return list of Sifia's areas"""
+        if self.request.user:
+            return Response({"areas": local_settings.AREAS}, 200)
+        else:
+            return Response({"message": "Permission denied"}, 403)

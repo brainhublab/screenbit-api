@@ -3,6 +3,7 @@ from django.db import models
 from authentication.models import User
 from programs.models import Program
 from django.utils.translation import ugettext as _
+from settings import local_settings
 
 
 class Station(models.Model):
@@ -40,6 +41,11 @@ class Station(models.Model):
     city = models.CharField(
         max_length=2,
         choices=CITIES,
+        null=True)
+
+    area = models.CharField(
+        max_length=4,
+        choices=local_settings.AREAS,
         null=True)
 
     mac_addr = models.TextField(max_length=300, blank=False, unique=True)

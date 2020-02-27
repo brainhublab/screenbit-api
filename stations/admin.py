@@ -4,7 +4,7 @@ from .models import Station, StationProgramRelation
 
 @admin.register(Station)
 class StationAdmin(admin.ModelAdmin):
-    list_display = ("creator", "pprovider", "title", "description", "city",
+    list_display = ("id", "creator", "pprovider", "title", "description", "city",
                     "mac_addr", "net_addr", "p_addr", "lat", "long", "created_at", "updated_at")
     search_fields = ("=creator__id", "pprovider__id", "title", "description", "city",
                      "mac_addr", "net_addr", "p_addr", "lat", "long", )

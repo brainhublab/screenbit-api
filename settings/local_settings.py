@@ -1,4 +1,7 @@
 import os
+from .areas import AREAS
+
+AREAS = AREAS
 
 API_HOST = os.environ.get('SCREENBIT_API_HOST')
 API_PORT = os.environ.get('SCREENBIT_API_PORT')

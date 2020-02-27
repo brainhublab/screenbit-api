@@ -1,0 +1,4 @@
+#id_areas, form .aligned ul {
+  max-height: 30vh;
+  overflow-y: scroll;
+}

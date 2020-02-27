@@ -14,7 +14,7 @@ class ProgramViewSet(viewsets.ModelViewSet):
     """
     Media program viewset
     """
-    queryset = Program.objects.all()
+    queryset = Program.objects.prefetch_related("stprrelation").all()
     serializer_class = ProgramSerializer
     permission_classes = [HasAPIKey | IsAdminUser]
 

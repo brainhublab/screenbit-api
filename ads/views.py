@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from settings import local_settings
 from rest_framework_api_key.permissions import HasAPIKey
+from .utils import ad_media_disable, ad_media_loader
 
 
 class AdViewSet(viewsets.ModelViewSet):
@@ -62,6 +63,7 @@ class AdViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         used_in = []
+        print(instance.pradmembership.all())
         for related_program in instance.program_set.all():
             ProgramStationRelations = related_program.stprrelation.all()
             for relation in ProgramStationRelations:
@@ -76,7 +78,21 @@ class AdViewSet(viewsets.ModelViewSet):
         else:
             return super(AdViewSet, self).destroy(request, *args, **kwargs)
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, permission_classes=[HasAPIKey | IsAdminUserOrOwner], methods=['patch'], url_path='enable/(?P<pk>\d*)')
+    def enable(self, request, pk):
+        """Action that return list of Sifia's areas"""
+        instance = self.get_object()
+        ad_media_loader(instance)
+        return Response({"message": "Enabaled"}, 200)
+
+    @action(detail=False, permission_classes=[HasAPIKey | IsAdminUserOrOwner], methods=['patch'], url_path='disable/(?P<pk>\d*)')
+    def disable(self, request, pk):
+        """Action that return list of Sifia's areas"""
+        instance = self.get_object()
+        ad_media_disable(instance)
+        return Response({"message": "Disabled"}, 200)
+
+    @action(detail=False, permission_classes=[HasAPIKey | IsAdminUserOrOwner], methods=['get'])
     def areas(self, request):
         """Action that return list of Sifia's areas"""
         if self.request.user:

@@ -14,14 +14,14 @@ class StationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Station
         fields = ("id", "url", "creator", 'creator_id', "pprovider",
-                  "programs", "title", "description", "city", "area",
+                  "programs", "title", "description", "city", "area", "viewers",
                   "mac_addr", "net_addr", "p_addr",
                   "lat", "long", "created_at", "updated_at")
 
         read_only_fields = ("id", "url", "creator", 'creator_id',
                             "created_at", "updated_at")
 
-        required_fields = ("title", "description", "area", "mac_addr")
+        required_fields = ("title", "description", "area", "viewers", "mac_addr")
         extra_kwargs = {field: {"required": True} for field in required_fields}
 
     def get_current_user(self):

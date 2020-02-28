@@ -2,8 +2,12 @@
 from django.db import models
 from authentication.models import User
 from programs.models import Program
+from programs.models import ProgramAdMembership
+from ads.models import Ad
 from django.utils.translation import ugettext as _
 from settings import local_settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Station(models.Model):
@@ -20,7 +24,8 @@ class Station(models.Model):
         User,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='StationPlaceProvider')
+        related_name='StationPlaceProvider',
+        verbose_name="Place provider")
 
     programs = models.ManyToManyField(Program, through="StationProgramRelation")
 
@@ -47,10 +52,10 @@ class Station(models.Model):
         max_length=4,
         choices=local_settings.AREAS,
         null=True)
-
+    viewers = models.IntegerField(null=True, blank=True)
     mac_addr = models.TextField(max_length=300, blank=False, unique=True)
     net_addr = models.TextField(max_length=300, blank=True, unique=True)
-    p_addr = models.TextField(max_length=300, blank=True)
+    p_addr = models.TextField(max_length=300, blank=True, verbose_name="Physical address")
 
     lat = models.DecimalField(max_digits=9,
                               decimal_places=7,

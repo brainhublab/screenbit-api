@@ -40,6 +40,6 @@ class Ad(models.Model):
     hours = ArrayField(
             models.CharField(choices=local_settings.HOURS, max_length=2, null=True),
             size=24, null=True)
-
+    is_active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

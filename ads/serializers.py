@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from .models import Ad
-
 from screenbit_core.models import File
 from screenbit_core.serializers import FileSerializer
 from django.conf import settings
 from django.db.models.query import QuerySet
+from .utils import ad_media_disable, ad_media_loader
 global_variables = settings.GLOBAL_VARIABLE[0]
 
 
@@ -19,9 +19,9 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
         model = Ad
         fields = ("id", "url", "creator", "creator_id",
                   "title", "description", "file", "media_type", "areas", "hours",
-                  "created_at", "updated_at")
+                  "is_active", "created_at", "updated_at")
         read_only_fields = ("id", "creator", "creator_id",
-                            "url", "created_at", "updated_at", "file", "media_type")
+                            "url", "is_active", "created_at", "updated_at", "file", "media_type")
         required_fields = ("title", "description", "areas", "hours")
         extra_kwargs = {field: {"required": True} for field in required_fields}
 
@@ -54,6 +54,7 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
         ad_data = super().create(validated_data)
         for file in media_file.values():
             file = File.objects.create(content_object=ad_data, file=file)
+        ad_media_loader(ad_data)
         return ad_data
 
     def update(self, instance, validated_data):
@@ -66,7 +67,9 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
 
         """ Check file extension """
         validated_data["media_type"] = is_ext_approved(media_file)
+        ad_media_disable(instance)
         ad_data = super().update(instance, validated_data)
+        ad_media_loader(ad_data)
         file_to_replace = File.objects.filter(object_id=instance.id)
         file_to_replace.delete()
         for file in media_file.values():

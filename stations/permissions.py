@@ -18,3 +18,11 @@ class IsAdminUser(permissions.BasePermission):
                 return True
             else:
                 return False
+
+
+class IsAuthenticated(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            return False
+        else:
+            return True

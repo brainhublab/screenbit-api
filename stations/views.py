@@ -2,7 +2,7 @@ from .models import Station
 from programs.models import ProgramAdMembership
 from .serializers import StationSerializer, StationLocationSerializer
 
-from .permissions import IsAdminUser
+from .permissions import IsAdminUser, IsAuthenticated
 from rest_framework_api_key.permissions import HasAPIKey
 from settings.local_settings import MEDIA_URL
 from rest_framework.decorators import action
@@ -12,6 +12,7 @@ from rest_framework import viewsets, filters, serializers
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
+from django.db.models import Sum
 from django.core.exceptions import PermissionDenied
 from django_filters import rest_framework as django_rest_filters
 
@@ -30,7 +31,6 @@ class StationViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         """Add user that make request to serializer data"""
-        print(dir(self.request))
         if self.request.user:
             serializer.save(creator=self.request.user)
         else:
@@ -155,6 +155,15 @@ class StationViewSet(viewsets.ModelViewSet):
                 return Response(serializer.data)
         else:
             raise serializer.ValidationError(("Login please"))
+
+    @action(detail=False, permission_classes=[HasAPIKey | IsAuthenticated], methods=['get'], url_path='areas/viewers')
+    def viewers(self, request):
+        """ Return count of all potential screen viewers in current area """
+        if "areas" in request.data:
+            potential_viewwers = Station.objects.filter(area__in=request.data["areas"]).aggregate(Sum("viewers"))
+            return Response(potential_viewwers, 200)
+        else:
+            return Response({"message": "Bad request parameters"}, 400)
 
 
 def station_portal_view(request):

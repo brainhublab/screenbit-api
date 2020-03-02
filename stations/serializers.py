@@ -41,41 +41,44 @@ class StationSerializer(serializers.HyperlinkedModelSerializer):
                 ("You can not create services for another user"))
         return value
 
-    def _custom_relations_schema_validator(self):
-        request_data = self.context.get("request").data
-        if "relations_schema" in request_data:
-            relations_schema = request_data["relations_schema"]
-            if relations_schema is not None:
-                for hour in relations_schema:
-                    if hour not in global_variables["available_hours_choices"]:
-                        raise serializers.ValidationError({"message": "Unavailable key in relations_schema"})
-                    get_object_or_404(Program, id=relations_schema[hour])
-        if "programs" in request_data:
-            del request_data["programs"]
-        return request_data
-
-    def create(self, validated_data):
-        request_data = self._custom_relations_schema_validator()
-        station = super().create(validated_data)
-        for hour in request_data["relations_schema"]:
-            StationProgramRelation(program=Program.objects.get(id=request_data["relations_schema"][hour]),
-                                   station=station,
-                                   hour=hour).save()
-        return station
-
-    def update(self, instance, validated_data):
-        request_data = self._custom_relations_schema_validator()
-        station = super().update(instance, validated_data)
-        if request_data["relations_schema"] is None:
-            instance.programs.clear()
-            return station
-        else:
-            instance.programs.clear()
-            for hour in request_data["relations_schema"]:
-                StationProgramRelation(program=Program.objects.get(id=request_data["relations_schema"][hour]),
-                                       station=station,
-                                       hour=hour).save()
-        return station
+    # def _custom_relations_schema_validator(self):
+    #     request_data = self.context.get("request").data
+    #     if "relations_schema" in request_data:
+    #         relations_schema = request_data["relations_schema"]
+    #         print("shema test")
+    #         print(relations_schema)
+    #         if relations_schema is not None:
+    #             print("SHEMATA NE E NONEEEEE")
+    #             for hour in relations_schema:
+    #                 if hour not in global_variables["available_hours_choices"]:
+    #                     raise serializers.ValidationError({"message": "Unavailable key in relations_schema"})
+    #                 get_object_or_404(Program, id=relations_schema[hour])
+    #     if "programs" in request_data:
+    #         del request_data["programs"]
+    #     return request_data
+    #
+    # def create(self, validated_data):
+    #     request_data = self._custom_relations_schema_validator()
+    #     station = super().create(validated_data)
+    #     for hour in request_data["relations_schema"]:
+    #         StationProgramRelation(program=Program.objects.get(id=request_data["relations_schema"][hour]),
+    #                                station=station,
+    #                                hour=hour).save()
+    #     return station
+    #
+    # def update(self, instance, validated_data):
+    #     request_data = self._custom_relations_schema_validator()
+    #     station = super().update(instance, validated_data)
+    #     if request_data["relations_schema"] is None:
+    #         instance.programs.clear()
+    #         return station
+    #     else:
+    #         instance.programs.clear()
+    #         for hour in request_data["relations_schema"]:
+    #             StationProgramRelation(program=Program.objects.get(id=request_data["relations_schema"][hour]),
+    #                                    station=station,
+    #                                    hour=hour).save()
+    #     return station
 
     def to_representation(self, instance, override=True):
         response = super().to_representation(instance)

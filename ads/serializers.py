@@ -5,6 +5,7 @@ from screenbit_core.serializers import FileSerializer
 from django.conf import settings
 from django.db.models.query import QuerySet
 from .utils import ad_media_disable, ad_media_loader
+from moviepy.editor import VideoFileClip
 global_variables = settings.GLOBAL_VARIABLE[0]
 
 
@@ -17,12 +18,12 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Ad
-        fields = ("id", "url", "creator", "creator_id",
+        fields = ("id", "url", "creator", "creator_id", "desired_viewers", "percent_to_load",
                   "title", "description", "file", "media_type", "areas", "hours",
-                  "is_active", "created_at", "updated_at")
+                  "is_active", "duration", "created_at", "updated_at")
         read_only_fields = ("id", "creator", "creator_id",
                             "url", "is_active", "created_at", "updated_at", "file", "media_type")
-        required_fields = ("title", "description", "areas", "hours")
+        required_fields = ("title", "description", "areas", "hours", "desired_viewers", "percent_to_load")
         extra_kwargs = {field: {"required": True} for field in required_fields}
 
     def get_current_user(self):
@@ -50,10 +51,21 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
                 ("You can update exactly one file!"))
 
         """ Check file extension """
-        validated_data["media_type"] = is_ext_approved(media_file)
-        ad_data = super().create(validated_data)
+        file_ext = is_ext_approved(media_file)
+        validated_data["media_type"] = file_ext
+
+        """ Save new file and duration value """
         for file in media_file.values():
+            if file_ext == "VD":
+                """ load file information (if video) to get duration """
+                file_info = VideoFileClip(file.temporary_file_path())
+                validated_data["duration"] = file_info.duration
+            elif "duration" not in validated_data:
+                raise serializers.ValidationError(
+                    ({"duration": "Missing duration value!"}))
+            ad_data = super().create(validated_data)
             file = File.objects.create(content_object=ad_data, file=file)
+        """ Load new media to screens """
         ad_media_loader(ad_data)
         return ad_data
 
@@ -66,14 +78,28 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
                 ("You can update exactly one file!"))
 
         """ Check file extension """
-        validated_data["media_type"] = is_ext_approved(media_file)
+        file_ext = is_ext_approved(media_file)
+        validated_data["media_type"] = file_ext
+        """ Disable old media from screens """
         ad_media_disable(instance)
-        ad_data = super().update(instance, validated_data)
-        ad_media_loader(ad_data)
+
+        """ Delete old file from DB """
         file_to_replace = File.objects.filter(object_id=instance.id)
         file_to_replace.delete()
+
+        """ Save new file and duration value """
         for file in media_file.values():
+            if file_ext == "VD":
+                """ load file information (if video) to get duration """
+                file_info = VideoFileClip(file.temporary_file_path())
+                validated_data["duration"] = file_info.duration
+            elif "duration" not in validated_data:
+                raise serializers.ValidationError(
+                    ({"duration": "Missing duration value!"}))
+            ad_data = super().update(instance, validated_data)
             file = File.objects.create(content_object=ad_data, file=file)
+        """ Load new media to screens """
+        ad_media_loader(ad_data)
         return ad_data
 
     def to_representation(self, instance, override=True):

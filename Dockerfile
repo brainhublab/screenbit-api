@@ -22,7 +22,8 @@ RUN apk add --no-cache --virtual .build-deps \
                 | sort -u \
     )" \
     && apk add --virtual .rundeps $runDeps \
-    && apk del .build-deps
+    && apk del .build-deps \
+    && apk add --update ffmpeg
 
 ENV screenbit_ENV=development
 

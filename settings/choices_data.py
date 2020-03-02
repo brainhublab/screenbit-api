@@ -1,173 +1,423 @@
 """ Areas available choices """
-BAKSTON = "1618"
-BANISHORA = "1233"
-BELI_BREZI = "1680"
-BENKOVSKI = "1278"
-BOROVO = "1680"
-BOTUNETS = "1870"
-BOYANA = "1616"
-CHELOPECHENE = "1853"
-DARVENITSA = "1756"
-DIANABAD = "1172"
-DRAGALEVTSI = "1415"
-DRUJBA_1 = "1592"
-DRUJBA_2 = "1582"
-FAKULTETA = "1373"
-FILIPOVTSI = "1390"
-GEO_MILEV = "1574"
-GORNA_BANYA = "1614"
-GORUBLYANE = "1138"
-GOTSE_DELCHEV = "1404"
-HADJI_DIMITAR = "1510"
-HIPODRUMA = "1612"
-HLADILNIKA = "1407"
-HRISTO_BOTEV = "1517"
-ILIANTSI = "1271"
-IVAN_VAZOV = "1408"
-IZGREV = "1113"
-IZTOK = "1113"
-KNYAJEVO = "1619"
-KRASNA_POLYANA = "1330"
-KRASNO_SELO = "1618"
-KREMIKOVTSI = "1849"
-LAGERA = "1612"
-LEVSKI = "1836"
-LOZENETS = "1421"
-LYULIN_1 = "1360"
-LYULIN_10 = "1335"
-LYULIN_2 = "1343"
-LYULIN_3 = "1336"
-LYULIN_4 = "1359"
-LYULIN_5 = "1359"
-LYULIN_6 = "1336"
-LYULIN_7 = "1324"
-LYULIN_8 = "1336"
-LYULIN_9 = "1324"
-MALASHEVTSI = "1225"
-MALINOVA_DOLINA = "1797"
-MANASTIRSKI_LIVADI = "1404"
-MLADOST_1 = "1784"
-MLADOST_2 = "1799"
-MLADOST_3 = "1712"
-MLADOST_4 = "1715"
-MODERNO_PREDGRADIE = "1360"
-MOTOPISTA = "1404"
-MUSAGENITSA = "1797"
-NADEJDA = "1220"
-NADEJDA_3 = "1229"
-NADEJDA_6 = "1231"
-OBELYA = "1387"
-OBELYA_2 = "1326"
-OVCHA_KUPEL = "1618"
-OVCHA_KUPEL_2 = "1632"
-PAVLOVO = "1618"
-PODUYANE = "1517"
-POLIGONA = "1784"
-REDUTA = "1506"
-REPUBLIKA = "1301"
-SESLAVTSI = "1808"
-SIMEONOVO = "1434"
-SLATINA = "1574"
-STEFAN_KARADJA = "1510"
-STRELBISHTE = "1404"
-STUDENTSKI_GRAD = "1700"
-SUHATA_REKA = "1505"
-SUHODOL = "1362"
-SVETA_TROITSA = "1309"
-TREBICH = "1298"
-VRAJDEBNA = "1839"
-YAVOROV = "1111"
-ZAHARNA_FABRIKA = "1345"
-ZAPADEN_PARK = "1373"
-ZONA_B_18 = "1309"
-ZONA_B_19 = "1330"
-ZONA_B_5 = "1303"
+AREA_0 = "0"
+AREA_1 = "1"
+AREA_2 = "2"
+AREA_3 = "3"
+AREA_4 = "4"
+AREA_5 = "5"
+AREA_6 = "6"
+AREA_7 = "7"
+AREA_8 = "8"
+AREA_9 = "9"
+AREA_10 = "10"
+AREA_11 = "11"
+AREA_12 = "12"
+AREA_13 = "13"
+AREA_14 = "14"
+AREA_15 = "15"
+AREA_16 = "16"
+AREA_17 = "17"
+AREA_18 = "18"
+AREA_19 = "19"
+AREA_20 = "20"
+AREA_21 = "21"
+AREA_22 = "22"
+AREA_23 = "23"
+AREA_24 = "24"
+AREA_25 = "25"
+AREA_26 = "26"
+AREA_27 = "27"
+AREA_28 = "28"
+AREA_29 = "29"
+AREA_30 = "30"
+AREA_31 = "31"
+AREA_32 = "32"
+AREA_33 = "33"
+AREA_34 = "34"
+AREA_35 = "35"
+AREA_36 = "36"
+AREA_37 = "37"
+AREA_38 = "38"
+AREA_39 = "39"
+AREA_40 = "40"
+AREA_41 = "41"
+AREA_42 = "42"
+AREA_43 = "43"
+AREA_44 = "44"
+AREA_45 = "45"
+AREA_46 = "46"
+AREA_47 = "47"
+AREA_48 = "48"
+AREA_49 = "49"
+AREA_50 = "50"
+AREA_51 = "51"
+AREA_52 = "52"
+AREA_53 = "53"
+AREA_54 = "54"
+AREA_55 = "55"
+AREA_56 = "56"
+AREA_57 = "57"
+AREA_58 = "58"
+AREA_59 = "59"
+AREA_60 = "60"
+AREA_61 = "61"
+AREA_62 = "62"
+AREA_63 = "63"
+AREA_64 = "64"
+AREA_65 = "65"
+AREA_66 = "66"
+AREA_67 = "67"
+AREA_68 = "68"
+AREA_69 = "69"
+AREA_70 = "70"
+AREA_71 = "71"
+AREA_72 = "72"
+AREA_73 = "73"
+AREA_74 = "74"
+AREA_75 = "75"
+AREA_76 = "76"
+AREA_77 = "77"
+AREA_78 = "78"
+AREA_79 = "79"
+AREA_80 = "80"
+AREA_81 = "81"
+AREA_82 = "82"
+AREA_83 = "83"
+AREA_84 = "84"
+AREA_85 = "85"
+AREA_86 = "86"
+AREA_87 = "87"
+AREA_88 = "88"
+AREA_89 = "89"
+AREA_90 = "90"
+AREA_91 = "91"
+AREA_92 = "92"
+AREA_93 = "93"
+AREA_94 = "94"
+AREA_95 = "95"
+AREA_96 = "96"
+AREA_97 = "97"
+AREA_98 = "98"
+AREA_99 = "99"
+AREA_100 = "100"
+AREA_101 = "101"
+AREA_102 = "102"
+AREA_103 = "103"
+AREA_104 = "104"
+AREA_105 = "105"
+AREA_106 = "106"
+AREA_107 = "107"
+AREA_108 = "108"
+AREA_109 = "109"
+AREA_110 = "110"
+AREA_111 = "111"
+AREA_112 = "112"
+AREA_113 = "113"
+AREA_114 = "114"
+AREA_115 = "115"
+AREA_116 = "116"
+AREA_117 = "117"
+AREA_118 = "118"
+AREA_119 = "119"
+AREA_120 = "120"
+AREA_121 = "121"
+AREA_122 = "122"
+AREA_123 = "123"
+AREA_124 = "124"
+AREA_125 = "125"
+AREA_126 = "126"
+AREA_127 = "127"
+AREA_128 = "128"
+AREA_129 = "129"
+AREA_130 = "130"
+AREA_131 = "131"
+AREA_132 = "132"
+AREA_133 = "133"
+AREA_134 = "134"
+AREA_135 = "135"
+AREA_136 = "136"
+AREA_137 = "137"
+AREA_138 = "138"
+AREA_139 = "139"
+AREA_140 = "140"
+AREA_141 = "141"
+AREA_142 = "142"
+AREA_143 = "143"
+AREA_144 = "144"
+AREA_145 = "145"
+AREA_146 = "146"
+AREA_147 = "147"
+AREA_148 = "148"
+AREA_149 = "149"
+AREA_150 = "150"
+AREA_151 = "151"
+AREA_152 = "152"
+AREA_153 = "153"
+AREA_154 = "154"
+AREA_155 = "155"
+AREA_156 = "156"
+AREA_157 = "157"
+AREA_158 = "158"
+AREA_159 = "159"
+AREA_160 = "160"
+AREA_161 = "161"
+AREA_162 = "162"
+AREA_163 = "163"
+AREA_164 = "164"
+AREA_165 = "165"
+AREA_166 = "166"
+AREA_167 = "167"
+AREA_168 = "168"
+AREA_169 = "169"
+AREA_170 = "170"
+AREA_171 = "171"
+AREA_172 = "172"
+AREA_173 = "173"
+AREA_174 = "174"
+AREA_175 = "175"
+AREA_176 = "176"
+AREA_177 = "177"
+AREA_178 = "178"
+AREA_179 = "179"
+AREA_180 = "180"
+AREA_181 = "181"
+AREA_182 = "182"
+AREA_183 = "183"
+AREA_184 = "184"
+AREA_185 = "185"
+AREA_186 = "186"
+AREA_187 = "187"
+AREA_188 = "188"
+AREA_189 = "189"
+AREA_190 = "190"
+AREA_191 = "191"
+AREA_192 = "192"
+AREA_193 = "193"
+AREA_194 = "194"
+AREA_195 = "195"
+AREA_196 = "196"
+AREA_197 = "197"
+AREA_198 = "198"
+AREA_199 = "199"
+AREA_200 = "200"
+AREA_201 = "201"
+AREA_202 = "202"
+AREA_203 = "203"
+AREA_204 = "204"
+AREA_205 = "205"
+AREA_206 = "206"
+AREA_207 = "207"
 
 AREAS = [
-    (BAKSTON, "Bakston"),
-    (BANISHORA, "Banishora"),
-    (BELI_BREZI, "Beli brezi"),
-    (BENKOVSKI, "Benkovski"),
-    (BOROVO, "Borovo"),
-    (BOTUNETS, "Botunets"),
-    (BOYANA, "Boyana"),
-    (CHELOPECHENE, "Chelopechene"),
-    (DARVENITSA, "Darvenitsa"),
-    (DIANABAD, "Dianabad"),
-    (DRAGALEVTSI, "Dragalevtsi"),
-    (DRUJBA_1, "Drujba 1"),
-    (DRUJBA_2, "Drujba 2"),
-    (FAKULTETA, "Fakulteta"),
-    (FILIPOVTSI, "Filipovtsi"),
-    (GEO_MILEV, "Geo Milev"),
-    (GORNA_BANYA, "Gorna Banya"),
-    (GORUBLYANE, "Gorublyane"),
-    (GOTSE_DELCHEV, "Gotse Delchev"),
-    (HADJI_DIMITAR, "Hadji Dimitar"),
-    (HIPODRUMA, "Hipodruma"),
-    (HLADILNIKA, "Hladilnika"),
-    (HRISTO_BOTEV, "Hristo Botev"),
-    (ILIANTSI, "Iliantsi"),
-    (IVAN_VAZOV, "Ivan Vazov"),
-    (IZGREV, "Izgrev"),
-    (IZTOK, "Iztok"),
-    (KNYAJEVO, "Knyajevo"),
-    (KRASNA_POLYANA, "Krasna Polyana"),
-    (KRASNO_SELO, "Krasno Selo"),
-    (KREMIKOVTSI, "Kremikovtsi"),
-    (LAGERA, "Lagera"),
-    (LEVSKI, "Levski"),
-    (LOZENETS, "Lozenets"),
-    (LYULIN_1, "Lyulin 1"),
-    (LYULIN_10, "Lyulin 10"),
-    (LYULIN_2, "Lyulin 2"),
-    (LYULIN_3, "Lyulin 3"),
-    (LYULIN_4, "Lyulin 4"),
-    (LYULIN_5, "Lyulin 5"),
-    (LYULIN_6, "Lyulin 6"),
-    (LYULIN_7, "Lyulin 7"),
-    (LYULIN_8, "Lyulin 8"),
-    (LYULIN_9, "Lyulin 9"),
-    (MALASHEVTSI, "Malashevtsi"),
-    (MALINOVA_DOLINA, "Malinova Dolina"),
-    (MANASTIRSKI_LIVADI, "Manastirski Livadi"),
-    (MLADOST_1, "Mladost 1"),
-    (MLADOST_2, "Mladost 2"),
-    (MLADOST_3, "Mladost 3"),
-    (MLADOST_4, "Mladost 4"),
-    (MODERNO_PREDGRADIE, "Moderno predgradie"),
-    (MOTOPISTA, "Motopista"),
-    (MUSAGENITSA, "Musagenitsa"),
-    (NADEJDA, "Nadejda"),
-    (NADEJDA_3, "Nadejda 3"),
-    (NADEJDA_6, "Nadejda 6"),
-    (OBELYA, "Obelya"),
-    (OBELYA_2, "Obelya 2"),
-    (OVCHA_KUPEL, "Ovcha kupel"),
-    (OVCHA_KUPEL_2, "Ovcha kupel 2"),
-    (PAVLOVO, "Pavlovo"),
-    (PODUYANE, "Poduyane"),
-    (POLIGONA, "Poligona"),
-    (REDUTA, "Reduta"),
-    (REPUBLIKA, "Republika"),
-    (SESLAVTSI, "Seslavtsi"),
-    (SIMEONOVO, "Simeonovo"),
-    (SLATINA, "Slatina"),
-    (STEFAN_KARADJA, "Stefan Karadja"),
-    (STRELBISHTE, "Strelbishte"),
-    (STUDENTSKI_GRAD, "Studentski grad"),
-    (SUHATA_REKA, "Suhata Reka"),
-    (SUHODOL, "Suhodol"),
-    (SVETA_TROITSA, "Sveta Troitsa"),
-    (TREBICH, "Trebich"),
-    (VRAJDEBNA, "Vrajdebna"),
-    (YAVOROV, "Yavorov"),
-    (ZAHARNA_FABRIKA, "Zaharna fabrika"),
-    (ZAPADEN_PARK, "Zapaden Park"),
-    (ZONA_B_18, "Zona B-18"),
-    (ZONA_B_19, "Zona B-19"),
-    (ZONA_B_5, "Zona B-5")
-    ]
+    (AREA_0, "Южен парк"),
+    (AREA_1, "Северен парк"),
+    (AREA_2, "Резиденция Бояна"),
+    (AREA_3, "Парк Централни софийски гробища"),
+    (AREA_4, "Парк Малашевски гробища"),
+    (AREA_5, "Парк Западен парк"),
+    (AREA_6, "Парк Заимов"),
+    (AREA_7, "Парк Гео Милев"),
+    (AREA_8, "Парк Въртопо"),
+    (AREA_9, "Парк Ботаническа градина"),
+    (AREA_10, "Парк Борисова градина"),
+    (AREA_11, "Парк Бакърени гробища"),
+    (AREA_12, "Ловен парк"),
+    (AREA_13, "Източен парк"),
+    (AREA_14, "Зоопарк"),
+    (AREA_15, "с. Яна"),
+    (AREA_16, "с. Чепинци"),
+    (AREA_17, "с. Световрачене"),
+    (AREA_18, "с. Подгумер"),
+    (AREA_19, "с. Плана"),
+    (AREA_20, "с. Панчарево"),
+    (AREA_21, "с. Негован"),
+    (AREA_22, "с. Мърчаево"),
+    (AREA_23, "с. Мрамор"),
+    (AREA_24, "с. Мировяне"),
+    (AREA_25, "с. Мало Бучино"),
+    (AREA_26, "с. Локорско"),
+    (AREA_27, "с. Лозен"),
+    (AREA_28, "с. Кътина"),
+    (AREA_29, "с. Кубратово"),
+    (AREA_30, "с. Кривина"),
+    (AREA_31, "с. Кокаляне"),
+    (AREA_32, "с. Клисура"),
+    (AREA_33, "с. Казичене"),
+    (AREA_34, "с. Иваняне"),
+    (AREA_35, "с. Житен"),
+    (AREA_36, "с. Желява"),
+    (AREA_37, "с. Железница"),
+    (AREA_38, "с. Долни Пасарел"),
+    (AREA_39, "с. Долни Богров"),
+    (AREA_40, "с. Доброславци"),
+    (AREA_41, "с. Горни Богров"),
+    (AREA_42, "с. Герман"),
+    (AREA_43, "с. Волуяк"),
+    (AREA_44, "с. Войнеговци"),
+    (AREA_45, "с. Владая"),
+    (AREA_46, "с. Бусманци"),
+    (AREA_47, "с. Бистрица"),
+    (AREA_48, "с. Балша"),
+    (AREA_49, "м-т яз. Искър"),
+    (AREA_50, "м-т Яладжа"),
+    (AREA_51, "м-т Юбилейна гора"),
+    (AREA_52, "м-т Щъркелово гнездо"),
+    (AREA_53, "м-т Подлозище"),
+    (AREA_54, "м-т Мала кория"),
+    (AREA_55, "м-т Киноцентъра"),
+    (AREA_56, "м-т Камбаните"),
+    (AREA_57, "м-т Детски град"),
+    (AREA_58, "м-т Гърдова глава"),
+    (AREA_59, "м-т Батареята"),
+    (AREA_60, "м-т Барите"),
+    (AREA_61, "ж.гр.Южен парк"),
+    (AREA_62, "ж.гр.Зоопарк"),
+    (AREA_63, "гр. Нови Искър"),
+    (AREA_64, "гр. Бухово"),
+    (AREA_65, "гр. Банкя"),
+    (AREA_66, "в.з.Черния кос"),
+    (AREA_67, "в.з.Симеоново - Драгалевци"),
+    (AREA_68, "в.з.Малинова долина - Герена"),
+    (AREA_69, "в.з.Малинова долина"),
+    (AREA_70, "в.з.Люлин"),
+    (AREA_71, "в.з.Киноцентъра 3 част"),
+    (AREA_72, "в.з.Киноцентъра"),
+    (AREA_73, "в.з.Килиите"),
+    (AREA_74, "в.з.Горна баня"),
+    (AREA_75, "в.з.Врана - Лозен"),
+    (AREA_76, "в.з.Врана - Герман"),
+    (AREA_77, "в.з.Бункера"),
+    (AREA_78, "в.з.Бояна"),
+    (AREA_79, "в.з.Беловодски път"),
+    (AREA_80, "в.з.Американски колеж"),
+    (AREA_81, "Яворов"),
+    (AREA_82, "Челопечене"),
+    (AREA_83, "Център"),
+    (AREA_84, "Христо Ботев"),
+    (AREA_85, "Хладилника"),
+    (AREA_86, "Хиподрума"),
+    (AREA_87, "Хаджи Димитър"),
+    (AREA_88, "Фондови жилища"),
+    (AREA_89, "Филиповци"),
+    (AREA_90, "Факултета"),
+    (AREA_91, "Триъгълника"),
+    (AREA_92, "Требич"),
+    (AREA_93, "Толстой"),
+    (AREA_94, "Суходол"),
+    (AREA_95, "Сухата река"),
+    (AREA_96, "Студентски град"),
+    (AREA_97, "Стрелбище"),
+    (AREA_98, "Слатина"),
+    (AREA_99, "Славия"),
+    (AREA_100, "Симеоново"),
+    (AREA_101, "Сеславци"),
+    (AREA_102, "Сердика"),
+    (AREA_103, "Свобода"),
+    (AREA_104, "Света Троица"),
+    (AREA_105, "СПЗ Слатина"),
+    (AREA_106, "СПЗ Модерно предградие"),
+    (AREA_107, "Република 2"),
+    (AREA_108, "Република"),
+    (AREA_109, "Редута"),
+    (AREA_110, "Разсадника"),
+    (AREA_111, "Полигона"),
+    (AREA_112, "Подуяне"),
+    (AREA_113, "Павлово"),
+    (AREA_114, "ПЗ Хладилника"),
+    (AREA_115, "ПЗ Илиянци"),
+    (AREA_116, "Орландовци"),
+    (AREA_117, "Овча купел 2"),
+    (AREA_118, "Овча купел 1"),
+    (AREA_119, "Овча купел"),
+    (AREA_120, "Оборище"),
+    (AREA_121, "Обеля 2"),
+    (AREA_122, "Обеля 1"),
+    (AREA_123, "Обеля"),
+    (AREA_124, "Надежда 4"),
+    (AREA_125, "Надежда 3"),
+    (AREA_126, "Надежда 2"),
+    (AREA_127, "Надежда 1"),
+    (AREA_128, "НПЗ Хаджи Димитър"),
+    (AREA_129, "НПЗ Средец"),
+    (AREA_130, "НПЗ Искър"),
+    (AREA_131, "НПЗ Изток"),
+    (AREA_132, "Мусагеница"),
+    (AREA_133, "Модерно предградие"),
+    (AREA_134, "Младост 4"),
+    (AREA_135, "Младост 3"),
+    (AREA_136, "Младост 2"),
+    (AREA_137, "Младост 1А"),
+    (AREA_138, "Младост 1"),
+    (AREA_139, "Медицинска академия"),
+    (AREA_140, "Манастирски ливади"),
+    (AREA_141, "Малинова долина"),
+    (AREA_142, "Малашевци"),
+    (AREA_143, "Люлин 9"),
+    (AREA_144, "Люлин 8"),
+    (AREA_145, "Люлин 7"),
+    (AREA_146, "Люлин 6"),
+    (AREA_147, "Люлин 5"),
+    (AREA_148, "Люлин 4"),
+    (AREA_149, "Люлин 3"),
+    (AREA_150, "Люлин 2"),
+    (AREA_151, "Люлин 10"),
+    (AREA_152, "Люлин 1"),
+    (AREA_153, "Люлин - център"),
+    (AREA_154, "Лозенец"),
+    (AREA_155, "Летище София"),
+    (AREA_156, "Левски Г"),
+    (AREA_157, "Левски В"),
+    (AREA_158, "Левски"),
+    (AREA_159, "Лагера"),
+    (AREA_160, "Кръстова вада"),
+    (AREA_161, "Кремиковци"),
+    (AREA_162, "Красно село"),
+    (AREA_163, "Красна поляна 3"),
+    (AREA_164, "Красна поляна 2"),
+    (AREA_165, "Красна поляна 1"),
+    (AREA_166, "Княжево"),
+    (AREA_167, "Карпузица"),
+    (AREA_168, "Илиянци"),
+    (AREA_169, "Илинден"),
+    (AREA_170, "Изток"),
+    (AREA_171, "Изгрев"),
+    (AREA_172, "Иван Вазов"),
+    (AREA_173, "Зона Б-5-3"),
+    (AREA_174, "Зона Б-5"),
+    (AREA_175, "Зона Б-19"),
+    (AREA_176, "Зона Б-18"),
+    (AREA_177, "Захарна фабрика"),
+    (AREA_178, "Западен парк"),
+    (AREA_179, "Експериментален"),
+    (AREA_180, "Дървеница"),
+    (AREA_181, "Дружба 2"),
+    (AREA_182, "Дружба 1"),
+    (AREA_183, "Драгалевци"),
+    (AREA_184, "Докторски паметник"),
+    (AREA_185, "Димитър Миленков"),
+    (AREA_186, "Дианабад"),
+    (AREA_187, "Гоце Делчев"),
+    (AREA_188, "Горубляне"),
+    (AREA_189, "Горна баня"),
+    (AREA_190, "Гео Милев"),
+    (AREA_191, "Гевгелийски"),
+    (AREA_192, "Връбница 2"),
+    (AREA_193, "Връбница 1"),
+    (AREA_194, "Враждебна"),
+    (AREA_195, "Военна рампа"),
+    (AREA_196, "Витоша"),
+    (AREA_197, "Градина"),
+    (AREA_198, "Бъкстон"),
+    (AREA_199, "Бояна"),
+    (AREA_200, "Ботунец 2"),
+    (AREA_201, "Ботунец"),
+    (AREA_202, "Борово"),
+    (AREA_203, "Бенковски"),
+    (AREA_204, "Белите брези"),
+    (AREA_205, "Банишора"),
+    (AREA_206, "Абдовица"),
+    (AREA_207, "7-ми 11-ти километър")
+]
 
 """ hours available choices """
 TWELVE_AM = "00"

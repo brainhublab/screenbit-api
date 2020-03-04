@@ -96,7 +96,7 @@ class StationViewSet(viewsets.ModelViewSet):
     def media(self, request):
         params = self.request.query_params
         if "mac_addr" in params:
-            mac_addr = int(params["mac_addr"])
+            mac_addr = params["mac_addr"]
             station = get_object_or_404(Station, mac_addr=mac_addr)
         elif "id" in params:
             """ Get program by id for development """

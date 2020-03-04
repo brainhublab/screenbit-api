@@ -1,10 +1,13 @@
 from stations.models import Station, StationProgramRelation
 from programs.models import Program, ProgramAdMembership
+from django.db.models import Sum
+from .models import Ad
 
 
 # Function to add advertisment media to stataions in current area and hour
 def ad_media_loader(instance):
     percent_to_load = instance.percent_to_load
+    sec_in_hour = 3600
     for area in instance.areas:
         area_stations_count = Station.objects.filter(area__in=instance.areas).count()
         stations_in_area = Station.objects.filter(area__in=instance.areas).order_by('?')[:round(percent_to_load * (area_stations_count / 100))]
@@ -16,11 +19,15 @@ def ad_media_loader(instance):
                 if program_rel:
                     try:
                         """ In case related hour program for station exist:
+
                             - create relation object for program <--> advertisment """
                         program = program_rel.program
-                        ProgramAdMembership(ad=instance,
-                                            program=program,
-                                            ad_index=ProgramAdMembership.objects.filter(program=program).count()).save()
+                        program_duration = Ad.objects.filter(pradmembership__program=program).aggregate(Sum("duration"))["duration__sum"]
+                        """ Check hour for enough free time for new advertisement (min 3 times in hour to show) """
+                        if int((sec_in_hour - program_duration) / instance.duration) >= 5:
+                            ProgramAdMembership(ad=instance,
+                                                program=program,
+                                                ad_index=ProgramAdMembership.objects.filter(program=program).count()).save()
                     except Exception as e:
                         raise e
                 else:

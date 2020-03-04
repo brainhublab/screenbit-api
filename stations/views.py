@@ -159,8 +159,8 @@ class StationViewSet(viewsets.ModelViewSet):
     @action(detail=False, permission_classes=[HasAPIKey | IsAuthenticated], methods=['get'], url_path='areas/viewers')
     def viewers(self, request):
         """ Return count of all potential screen viewers in current area """
-        if "areas" in request.data:
-            potential_viewwers = Station.objects.filter(area__in=request.data["areas"]).aggregate(Sum("viewers"))
+        if "areas" in request.GET:
+            potential_viewwers = Station.objects.filter(area__in=request.GET.getlist("areas")).aggregate(Sum("viewers"))
             return Response(potential_viewwers, 200)
         else:
             return Response({"message": "Bad request parameters"}, 400)

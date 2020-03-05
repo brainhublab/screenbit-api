@@ -1,8 +1,6 @@
 """Models"""
 from django.db import models
-
 from stations.models import Station
-from programs.models import Program
 from ads.models import Ad
 from django.utils.translation import ugettext as _
 
@@ -13,12 +11,6 @@ class Feedback(models.Model):
     """
     station = models.ForeignKey(
         Station,
-        null=False,
-        on_delete=models.CASCADE,
-        related_name='Feedback')
-
-    program = models.ForeignKey(
-        Program,
         null=False,
         on_delete=models.CASCADE,
         related_name='Feedback')

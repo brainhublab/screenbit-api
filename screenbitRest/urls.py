@@ -29,7 +29,6 @@ import public_configs.urls
 
 import stations.urls
 import ads.urls
-import programs.urls
 import feedbacks.urls
 
 
@@ -47,7 +46,6 @@ urlpatterns = [
         url(r'', include(public_configs.urls)),
         url(r'', include(stations.urls)),
         url(r'', include(ads.urls)),
-        url(r'', include(programs.urls)),
         url(r'', include(feedbacks.urls)),
         url(r'auth/registration/',
             include('rest_auth.registration.urls')),

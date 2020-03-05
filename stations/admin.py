@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Station, StationProgramRelation
+from .models import Station, StationAdRelation
 
 
 @admin.register(Station)
@@ -11,7 +11,7 @@ class StationAdmin(admin.ModelAdmin):
                      "mac_addr", "net_addr", "p_addr", "lat", "long", )
 
 
-@admin.register(StationProgramRelation)
-class StationProgramRelationAdmin(admin.ModelAdmin):
-    list_display = ("program", "station", "hour", "created_at", "updated_at")
-    search_fields = ("=station__id", "=program__id", "=hour")
+@admin.register(StationAdRelation)
+class StationAdRelationAdmin(admin.ModelAdmin):
+    list_display = ("ad", "station", "hour", "created_at", "updated_at")
+    search_fields = ("=station__id", "=ad__id", "=hour")

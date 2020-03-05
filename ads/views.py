@@ -16,7 +16,7 @@ class AdViewSet(viewsets.ModelViewSet):
     """
     Advertising viewset
     """
-    queryset = Ad.objects.prefetch_related("pradmembership").order_by('-created_at')
+    queryset = Ad.objects.prefetch_related("stadrelation").order_by('-created_at')
     serializer_class = AdSerializer
     permission_classes = [HasAPIKey | IsAdminUserOrOwner]
     filter_backends = (filters.SearchFilter,
@@ -62,19 +62,10 @@ class AdViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        used_in = []
-        print(instance.pradmembership.all())
-        for related_program in instance.program_set.all():
-            ProgramStationRelations = related_program.stprrelation.all()
-            for relation in ProgramStationRelations:
-                relation_info = {
-                    "program": relation.program,
-                    "station": relation.station
-                }
-                used_in.append(relation_info)
-        if len(used_in) > 0:
-            raise serializers.ValidationError({"message": "Ad is used in activ advertismen",
-                                               "used_in": used_in})
+        if instance.is_active:
+            raise serializers.ValidationError({"message":
+                                               "Ad is used in activ advertisment. \
+                                                Please disable advertisement media before delete"})
         else:
             return super(AdViewSet, self).destroy(request, *args, **kwargs)
 

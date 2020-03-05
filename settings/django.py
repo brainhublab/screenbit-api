@@ -70,7 +70,6 @@ INSTALLED_APPS = [
     "stations",
     "station_auth",
     "ads",
-    "programs",
     "feedbacks",
 
     # auth
@@ -132,7 +131,7 @@ GLOBAL_VARIABLE = {
     "approved_image_ext": ["jpg", "jpeg", "png"],
     "approved_video_ext": ["mp4", "mkv", "webm", "avi", "wmv", "gif", "flv", "svi"],
     "approved_file_ext": ["txt", 'pdf', 'doc', 'docx', 'xlsx', 'xls'],
-    # Row below show available Hours choices for Station/Program relation
+    # Row below show available Hours choices for Station/Ad relation
     "available_hours_choices": ["00", "01", "02", "03", "04", "05", "06", "07",
                                 "08", "09", "10", "11", "12", "13", "14", "15",
                                 "16", "17", "18", "19", "20", "21", "22", "23"]

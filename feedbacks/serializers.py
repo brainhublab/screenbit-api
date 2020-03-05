@@ -9,11 +9,11 @@ class FeedbackSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Feedback
-        fields = ("id", "url", "station", "station_id", "program", "program_id",
+        fields = ("id", "url", "station", "station_id",
                   "ad", "ad_id", "duration", "created_at", "updated_at")
-        read_only_fields = ("id", "url", "station", "program_id", "ad_id",
+        read_only_fields = ("id", "url", "station",
                             "created_at", "updated_at")
-        required_fields = ("duration", "program", "ad",)
+        required_fields = ("duration", "ad",)
         extra_kwargs = {field: {"required": True} for field in required_fields}
 
     def get_station_from_token(self):
@@ -29,8 +29,7 @@ class FeedbackSerializer(serializers.HyperlinkedModelSerializer):
         station = self.get_station_from_token()
         if station:
             relations_exist = Station.objects.filter(id=station.id,
-                                                     stprrelation__program=data["program"],
-                                                     stprrelation__program__pradmembership__ad=data["ad"]).first()
+                                                     stadrelation__ad=data["ad"]).first()
 
             if relations_exist:
                 data["station"] = station

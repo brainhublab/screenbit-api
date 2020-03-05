@@ -1,13 +1,9 @@
 """Models"""
 from django.db import models
 from authentication.models import User
-from programs.models import Program
-from programs.models import ProgramAdMembership
-from ads.models import Ad
 from django.utils.translation import ugettext as _
+from ads.models import Ad
 from settings import local_settings
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 
 class Station(models.Model):
@@ -27,7 +23,7 @@ class Station(models.Model):
         related_name='StationPlaceProvider',
         verbose_name="Place provider")
 
-    programs = models.ManyToManyField(Program, through="StationProgramRelation")
+    ads = models.ManyToManyField(Ad, through="StationAdRelation")
 
     title = models.TextField(max_length=60, blank=False)
     description = models.TextField(max_length=300, blank=False)
@@ -68,11 +64,11 @@ class Station(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class StationProgramRelation(models.Model):
+class StationAdRelation(models.Model):
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='stadrelation')
+    station = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='stadrelation')
 
-    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='stprrelation')
-    station = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='stprrelation')
-
+    index = models.IntegerField(null=True, blank=True)
     hour = models.CharField(
         max_length=2,
         choices=local_settings.HOURS,
@@ -81,5 +77,5 @@ class StationProgramRelation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        unique_together = ("station", "hour",)
+    # class Meta:
+    #     unique_together = ("station", "hour",)

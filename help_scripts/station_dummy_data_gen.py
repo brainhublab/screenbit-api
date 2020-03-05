@@ -3,7 +3,7 @@ import random
 from ipaddress import IPv4Address
 
 
-areas = {
+areass = {
     "AREA_0": "0",
     "AREA_1": "1",
     "AREA_2": "2",
@@ -224,11 +224,23 @@ areas = {
     "AREA_217": "217"
     }
 
+areas = {
+    "AREA_0": "0",
+    "AREA_1": "1",
+    "AREA_2": "2",
+    "AREA_3": "3",
+    "AREA_4": "4",
+    "AREA_5": "5",
+    "AREA_6": "6",
+    "AREA_7": "7",
+    "AREA_8": "8",
+    "AREA_9": "9",
+    "AREA_10": "10"}
 
 station_url = "http://localhost:9123/screenbit_api/stations/"
 
 """ Only worked with superuser, admin or staff Token """
-admin_token = "jWFS3TZeUkqjUjv1b4qyjFszMshR2U"
+admin_token = "V0aP0MhEpNygr4rLcfSlrmHgh7Yqz6"
 headers = {'Authorization': 'Bearer ' + admin_token}
 
 

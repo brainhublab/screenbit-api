@@ -1,5 +1,4 @@
 from .models import Station
-from programs.models import ProgramAdMembership
 from .serializers import StationSerializer, StationLocationSerializer
 
 from .permissions import IsAdminUser, IsAuthenticated
@@ -42,11 +41,11 @@ class StationViewSet(viewsets.ModelViewSet):
         queryset = queryset.all()
         hours_condition = Q()
         if "free_hours" in request.data:
-            hours_condition.add(Q(stprrelation__hour__in=request.data["free_hours"]), Q.AND)
+            hours_condition.add(Q(stadrelation__hour__in=request.data["free_hours"]), Q.AND)
             queryset = queryset.exclude(hours_condition)
 
         elif "busy_hours" in request.data:
-            hours_condition.add(Q(stprrelation__hour__in=request.data["busy_hours"]), Q.AND)
+            hours_condition.add(Q(stadrelation__hour__in=request.data["busy_hours"]), Q.AND)
             queryset = queryset.filter(hours_condition)
 
         another_conditions = Q()
@@ -94,40 +93,43 @@ class StationViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, permission_classes=[], methods=['get'])
     def media(self, request):
+        """ Get loaded ads for hour by mac address
+            Function will be used by station to get needed ads to show"""
         params = self.request.query_params
         if "mac_addr" in params:
             mac_addr = params["mac_addr"]
             station = get_object_or_404(Station, mac_addr=mac_addr)
         elif "id" in params:
-            """ Get program by id for development """
+            """ Get loaded ads for hour by id for development """
             id = int(params["id"])
             station = get_object_or_404(Station, id=id)
         else:
             raise serializers.ValidationError({"message": "Missing parameter"})
 
-        if station.programs is not None:
+        if station.ads is not None:
             if "hour" in params:
                 if params["hour"] not in global_variables["available_hours_choices"]:
                     return Response({"message": "Bad Request"}, 409)
-                related_programs = station.stprrelation.filter(hour=params["hour"])
+                related_ads = station.stadrelation.filter(hour=params["hour"])
             else:
-                related_programs = station.stprrelation.all().order_by("-hour")
+                related_ads = station.stadrelation.all().order_by("-hour")
             media_data = {}
-            for relation in related_programs:
-                media_data[relation.hour] = {}
-                media_data[relation.hour]["program_id"] = relation.program.id
-                program_ad_members = ProgramAdMembership.objects.filter(program=relation.program).order_by("ad_index")
-                media_data[relation.hour]["program_data"] = {}
-                for program_ad_member in program_ad_members:
-                    media_data[relation.hour]["program_data"][program_ad_member.ad_index] = {"type":
-                                                                                             program_ad_member.ad.media_type,
-                                                                                             "url":
-                                                                                             MEDIA_URL + str(program_ad_member.ad.file.get().file)
-                                                                                             }
+            for relation in related_ads:
+                if relation.hour not in media_data:
+                    media_data[relation.hour] = {}
+                media_data[relation.hour][relation.index] = {"ad_id":
+                                                             relation.ad.id,
+                                                             "type":
+                                                             relation.ad.media_type,
+                                                             "duration":
+                                                             relation.ad.duration,
+                                                             "url":
+                                                             MEDIA_URL + str(relation.ad.file.get().file)
+                                                             }
             return Response(media_data)
         else:
             return Response({
-                "message": "This station dont have media program."
+                "message": "This station dont have media"
                 })
 
     @action(detail=False, methods=['get'])

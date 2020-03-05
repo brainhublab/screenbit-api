@@ -3,7 +3,6 @@ from .models import Ad
 from screenbit_core.models import File
 from screenbit_core.serializers import FileSerializer
 from django.conf import settings
-from django.db.models.query import QuerySet
 from .utils import ad_media_disable, ad_media_loader
 from moviepy.editor import VideoFileClip
 global_variables = settings.GLOBAL_VARIABLE[0]
@@ -101,18 +100,6 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
         """ Load new media to screens """
         ad_media_loader(ad_data)
         return ad_data
-
-    def to_representation(self, instance, override=True):
-        response = super().to_representation(instance)
-        if not isinstance(self.instance, QuerySet):
-            ads = {}
-            for relation in instance.pradmembership.all():
-                ads[relation.program.id] = {"stations": []}
-                for program_relation in relation.program.stprrelation.all():
-                    ads[relation.program.id]["stations"].append({"id": program_relation.station.id,
-                                                                 "hour": program_relation.hour})
-            response["programs"] = ads
-        return response
 
 
 def is_ext_approved(media_file):

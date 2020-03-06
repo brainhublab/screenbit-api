@@ -8,11 +8,15 @@ from django.db.models import Max
 def ad_media_loader(instance):
     dev_station = Station.objects.filter(mac_addr="MAC:TEST").first()
     for hour in instance.hours:
+        index = StationAdRelation.objects.filter(station=dev_station,
+                                                 hour=hour).aggregate(Max('index'))["index__max"]
+        if index is not None:
+            index += 1
+        else:
+            index = 0
         StationAdRelation(ad=instance,
                           station=dev_station,
-                          # index=StationAdRelation.objects.filter(station=dev_station, hour=hour).count(),
-                          index=StationAdRelation.objects.filter(station=dev_station,
-                                                                 hour=hour).aggregate(Max('index'))["index__max"] + 1,
+                          index=index,
                           hour=hour).save()
 
     percent_to_load = instance.percent_to_load
@@ -29,10 +33,15 @@ def ad_media_loader(instance):
                 if not busy_time:
                     busy_time = 0
                 if int((sec_in_hour - busy_time) / instance.duration) >= 3:
+                    index = StationAdRelation.objects.filter(station=station,
+                                                             hour=hour).aggregate(Max('index'))["index__max"]
+                    if index is not None:
+                        index += 1
+                    else:
+                        index = 0
                     StationAdRelation(ad=instance,
                                       station=station,
-                                      index=StationAdRelation.objects.filter(station=station,
-                                                                             hour=hour).aggregate(Max('index'))["index__max"] + 1,
+                                      index=index,
                                       hour=hour).save()
 
     instance.is_active = True

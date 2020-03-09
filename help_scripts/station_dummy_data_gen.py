@@ -245,7 +245,26 @@ headers = {'Authorization': 'Bearer ' + admin_token}
 
 
 """ Generate dummy data for station model """
+
+
 def autogen_stations(url, headers, areas):
+    test_station_data = {
+                "title": "Screenbit default",
+                "description": "Screenbit default",
+                "city": "SO",
+                "area": "217",
+                "viewers": 345,
+                "mac_addr": "MAC:TEST",
+                "net_addr": "NET:TEST",
+                "p_addr": "Sesame street",
+                "lat": 2.123123,
+                "long": 2.123123
+                }
+
+    print("MAC:TEST")
+    print("NET:TEST")
+    print(requests.post(url, data=test_station_data, headers=headers))
+
     d = 0
     for area in areas:
         for i in range(1):

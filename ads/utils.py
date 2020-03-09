@@ -18,12 +18,13 @@ def ad_media_loader(instance):
                           station=dev_station,
                           index=index,
                           hour=hour).save()
+        instance.is_active = True
 
     percent_to_load = instance.percent_to_load
     sec_in_hour = 3600
     for area in instance.areas:
         area_stations_count = Station.objects.filter(area__in=instance.areas).count()
-        stations_in_area = Station.objects.filter(area__in=instance.areas).order_by('?')[:round(percent_to_load * (area_stations_count / 100))]
+        stations_in_area = Station.objects.filter(area__in=instance.areas).exclude(mac_addr="MAC:TEST").order_by('?')[:round(percent_to_load * (area_stations_count / 100))]
         for station in stations_in_area:
             """ create relation Ad <--> Station for any needed hour """
             for hour in instance.hours:
@@ -44,7 +45,7 @@ def ad_media_loader(instance):
                                       index=index,
                                       hour=hour).save()
 
-    instance.is_active = True
+                    instance.is_active = True
     instance.save()
 
 

@@ -3,7 +3,7 @@ import random
 from ipaddress import IPv4Address
 
 
-areass = {
+areas = {
     "AREA_0": "0",
     "AREA_1": "1",
     "AREA_2": "2",
@@ -224,18 +224,18 @@ areass = {
     "AREA_217": "217"
     }
 
-areas = {
-    "AREA_0": "0",
-    "AREA_1": "1",
-    "AREA_2": "2",
-    "AREA_3": "3",
-    "AREA_4": "4",
-    "AREA_5": "5",
-    "AREA_6": "6",
-    "AREA_7": "7",
-    "AREA_8": "8",
-    "AREA_9": "9",
-    "AREA_10": "10"}
+# areas = {
+#     "AREA_0": "0",
+#     "AREA_1": "1",
+#     "AREA_2": "2",
+#     "AREA_3": "3",
+#     "AREA_4": "4",
+#     "AREA_5": "5",
+#     "AREA_6": "6",
+#     "AREA_7": "7",
+#     "AREA_8": "8",
+#     "AREA_9": "9",
+#     "AREA_10": "10"}
 
 station_url = "http://localhost:9123/screenbit_api/stations/"
 
@@ -248,7 +248,7 @@ headers = {'Authorization': 'Bearer ' + admin_token}
 def autogen_stations(url, headers, areas):
     d = 0
     for area in areas:
-        for i in range(6):
+        for i in range(1):
             viewers = random.randrange(150, 400)
             """ Generate random mac addres """
             mac = "%02x:%02x:%02x:%02x:%02x:%02x" % (random.randint(0, 255),

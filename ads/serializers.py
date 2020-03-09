@@ -22,7 +22,7 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
                   "is_active", "duration", "created_at", "updated_at")
         read_only_fields = ("id", "creator", "creator_id",
                             "url", "is_active", "created_at", "updated_at", "file", "media_type")
-        required_fields = ("title", "description", "areas", "hours", "desired_viewers", "percent_to_load")
+        required_fields = ("title", "description", "areas", "hours", "duration" "desired_viewers", "percent_to_load")
         extra_kwargs = {field: {"required": True} for field in required_fields}
 
     def get_current_user(self):
@@ -40,6 +40,14 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
         if user != value:
             raise serializers.ValidationError("You can not create services for another user")
         return value
+
+    def validate_duration(self, value):
+        if value is not None:
+            if value > 0:
+                return value
+            else:
+                raise serializers.ValidationError(
+                    ("Duration valuie must be bigger than 0"))
 
     def create(self, validated_data):
         """ Add file objects while advertising object is on create"""

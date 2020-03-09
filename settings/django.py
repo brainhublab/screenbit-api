@@ -137,6 +137,8 @@ GLOBAL_VARIABLE = {
                                 "16", "17", "18", "19", "20", "21", "22", "23"]
 },
 
+FILE_UPLOAD_HANDLERS = ['django.core.files.uploadhandler.TemporaryFileUploadHandler']
+
 MIDDLEWARE = [
     # cache
     # 'django.middleware.cache.UpdateCacheMiddleware',

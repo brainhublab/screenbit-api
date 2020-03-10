@@ -3,7 +3,7 @@ from .serializers import StationSerializer, StationLocationSerializer
 
 from .permissions import IsAdminUser, IsAuthenticated
 from rest_framework_api_key.permissions import HasAPIKey
-from settings.local_settings import MEDIA_URL
+# from settings.local_settings import MEDIA_URL
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets, filters, serializers
@@ -14,6 +14,7 @@ from django.db.models import Q
 from django.db.models import Sum
 from django.core.exceptions import PermissionDenied
 from django_filters import rest_framework as django_rest_filters
+from django.http import HttpRequest
 
 global_variables = settings.GLOBAL_VARIABLE[0]
 
@@ -93,6 +94,8 @@ class StationViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, permission_classes=[], methods=['get'])
     def media(self, request):
+        """ get the right host (localhost / ip addr / domain ...) for media url """
+        MEDIA_URL = "http://%s/screenbit_api/media/" % (request.META["HTTP_HOST"])
         """ Get loaded ads for hour by mac address
             Function will be used by station to get needed ads to show"""
         params = self.request.query_params

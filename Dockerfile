@@ -9,7 +9,10 @@ WORKDIR /usr/src/screenbitApi
 RUN apk add --no-cache --virtual .build-deps \
     ca-certificates gcc postgresql-dev linux-headers musl-dev \
     libffi-dev jpeg-dev zlib-dev \
+    && apk add apache2 \
+    && apk add apache2-dev \
     && pip install -r requirements.txt \
+    && pip install mod_wsgi \
     && find /usr/local \
         \( -type d -a -name test -o -name tests \) \
         -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
@@ -25,8 +28,11 @@ RUN apk add --no-cache --virtual .build-deps \
     && apk del .build-deps \
     && apk add --update ffmpeg
 
+RUN mod_wsgi-express module-config >> /etc/apache2/httpd.conf
+
 ENV screenbit_ENV=development
 
+COPY ./screenbit.conf /etc/apache2/conf.d
 COPY . /usr/src/screenbitApi
 
 RUN apk add --no-cache tzdata

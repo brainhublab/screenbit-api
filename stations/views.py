@@ -95,7 +95,7 @@ class StationViewSet(viewsets.ModelViewSet):
     @action(detail=False, permission_classes=[], methods=['get'])
     def media(self, request):
         """ get the right host (localhost / ip addr / domain ...) for media url """
-        MEDIA_URL = "http://%s/screenbit_api/media/" % (request.META["HTTP_HOST"])
+        MEDIA_URL = "http://%s/screenbit_api/server_media/" % (request.META["HTTP_HOST"])
         """ Get loaded ads for hour by mac address
             Function will be used by station to get needed ads to show"""
         params = self.request.query_params

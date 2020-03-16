@@ -273,7 +273,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "collected_static")
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
-MEDIA_URL = '/screenbit_api/media/'
+
+MEDIA_URL = '/screenbit_api/server_media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "server_media")
 
 OAUTH2_PROVIDER = {

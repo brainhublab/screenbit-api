@@ -111,9 +111,17 @@ class StationViewSet(viewsets.ModelViewSet):
 
         if station.ads is not None:
             if "hour" in params:
-                if params["hour"] not in global_variables["available_hours_choices"]:
-                    return Response({"message": "Bad Request"}, 409)
-                related_ads = station.stadrelation.filter(hour=params["hour"])
+                hour = str(params["hour"])
+                if len(params["hour"]) == 1:
+                    """
+                    add '0' if single number for hour parameter
+                    to can be veryfied in 'available_hours_choices'
+                    (0-9) -> (00-09)
+                    """
+                    hour = "0" + hour
+                if hour not in global_variables["available_hours_choices"]:
+                    return Response({"message": "Bad Request"}, 400)
+                related_ads = station.stadrelation.filter(hour=hour)
             else:
                 related_ads = station.stadrelation.all().order_by("-hour")
             media_data = {}

@@ -4,10 +4,9 @@ if [ "$screenbit_ENV" = "production" ]; then
     echo Production env
     chown -R apache:root /usr/src/screenbitApi/server_media
 
-    """
-    change static folder permissions while debug = True in django settings
-    othervise change only collected_static folder permission
-    """
+    # change static folder permissions while 'debug = True' in django settings
+    # otherwise change only collected_static folder permission
+    
     chown -R apache:root /usr/src/screenbitApi/static
     chown -R apache:root /usr/src/screenbitApi/collected_static
     httpd -D FOREGROUND

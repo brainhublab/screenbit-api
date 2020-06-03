@@ -1,7 +1,7 @@
 from rest_framework import permissions
 from settings import local_settings
 from station_auth.models import StationToken
-token_key_word_origin = local_settings.SCREEN_TOKEN_KEY_WORD
+token_key_word_origin = local_settings.SCREEN_TOKEN_SECRET
 
 
 class IsAuthenticatedScreen(permissions.BasePermission):

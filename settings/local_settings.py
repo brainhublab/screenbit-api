@@ -1,9 +1,12 @@
 import os
 from .choices_data import AREAS
 from .choices_data import HOURS
+from .choices_data import EVENTS, VIEWER
 
 AREAS = AREAS
 HOURS = HOURS
+EVENTS = EVENTS
+VIEWER = VIEWER
 API_HOST = os.environ.get('SCREENBIT_API_HOST')
 API_PORT = os.environ.get('SCREENBIT_API_PORT')
 MEDIA_URL = os.environ.get('MEDIA_API_URL')
@@ -30,6 +33,7 @@ API_CLIENT_ID = os.environ.get('API_CLIENT_ID')
 API_CLIENT_SECRET = os.environ.get('API_CLIENT_SECRET')
 
 # screen authentication needs
+SCREEN_TOKEN_SECRET = os.environ.get('SCREEN_TOKEN_SECRET')
 SCREEN_TOKEN_KEY_WORD = os.environ.get('SCREEN_TOKEN_KEY_WORD')
 
 RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST')

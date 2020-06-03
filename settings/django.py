@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     "station_auth",
     "ads",
     "feedbacks",
+    "events",
 
     # auth
     'oauth2_provider',

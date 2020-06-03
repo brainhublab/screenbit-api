@@ -1,3 +1,5 @@
+""" When add new list of choices don't forget to import it to './local_settings.py' """
+
 """ Areas available choices """
 AREA_0 = "0"
 AREA_1 = "1"
@@ -490,5 +492,17 @@ HOURS = [
     (NINE_PM, "NINE PM"),
     (TEN_PM, "TEN PM"),
     (ELEVEN_PM, "ELEVEN PM")
-
     ]
+
+""" screen event available choices """
+VIEWER = "viewer"
+REACHED = "reached"
+HOLDER = "holder"
+BTN_USER = "btn_usr"
+
+EVENTS = [
+    (VIEWER, "Viewer"),
+    (REACHED, "Reached"),
+    (HOLDER, "Holder"),
+    (BTN_USER, "Button user")
+]

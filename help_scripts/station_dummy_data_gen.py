@@ -240,7 +240,7 @@ areas = {
 station_url = "http://localhost:9123/screenbit_api/stations/"
 
 """ Only worked with superuser, admin or staff Token """
-admin_token = "V0aP0MhEpNygr4rLcfSlrmHgh7Yqz6"
+admin_token = "NbvIf5kJDplnhElYx3riTlgFdCG7UR"
 headers = {'Authorization': 'Bearer ' + admin_token}
 
 

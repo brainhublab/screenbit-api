@@ -25,4 +25,8 @@ class IsAuthenticatedScreen(permissions.BasePermission):
                 token_obj = StationToken.objects.filter(station_id=token["sub"], token=t).first()
                 if token_obj:
                     return True
+        if not request.user.is_authenticated:
+            return False
+        if request.user.is_admin:
+            return True
         return False

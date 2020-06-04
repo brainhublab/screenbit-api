@@ -12,7 +12,7 @@ class IsAuthenticatedScreen(permissions.BasePermission):
             token = request.META["HTTP_BIT_TOKEN"].split()[1]
 
             if token_key_word == token_key_word_origin and token not in [None, ""]:
-                token_obj = StationToken.objects.filter(key=token).first()
+                token_obj = StationToken.objects.filter(token=token).first()
                 if token_obj:
                     return True
         return False

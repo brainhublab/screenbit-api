@@ -18,7 +18,7 @@ class FeedbackViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,
                        django_rest_filters.DjangoFilterBackend, )
 
-    def filter_event_queryset(self, queryset, request):
+    def filter_feedback_queryset(self, queryset, request):
         queryset = queryset.all()
         conditions = Q()
 
@@ -42,6 +42,6 @@ class FeedbackViewSet(viewsets.ModelViewSet):
         return queryset.filter(conditions)
 
     def list(self, request):
-        self.queryset = self.filter_event_queryset(self.queryset, request)
+        self.queryset = self.filter_feedback_queryset(self.queryset, request)
         serializer = self.serializer_class(self.queryset, many=True, context={'request': request})
         return Response(serializer.data)

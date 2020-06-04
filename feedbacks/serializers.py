@@ -20,7 +20,7 @@ class FeedbackSerializer(serializers.HyperlinkedModelSerializer):
         """Gets current user from request"""
         request = self.context.get("request")
         token = request.META["HTTP_BIT_TOKEN"].split()[1]
-        token_obj = StationToken.objects.filter(key=token).first()
+        token_obj = StationToken.objects.filter(token=token).first()
         if token_obj:
             return token_obj.station
         return None

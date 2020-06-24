@@ -1,11 +1,12 @@
 from .models import Event
 from .serializers import EventSerializer
-from .permissions import IsAuthenticatedScreen
+from .permissions import IsAuthenticatedScreen, IsAuthenticatedWorker
 from rest_framework import viewsets, filters
 from django.db.models import Q
 from django_filters import rest_framework as django_rest_filters
 from rest_framework.response import Response
 from rest_framework_api_key.permissions import HasAPIKey
+from rest_framework.decorators import action
 
 
 class EventViewSet(viewsets.ModelViewSet):
@@ -75,3 +76,8 @@ class EventViewSet(viewsets.ModelViewSet):
         self.queryset = self.filter_event_queryset(self.queryset, request)
         serializer = self.serializer_class(self.queryset, many=True, context={'request': request})
         return Response(serializer.data)
+
+    @action(detail=False, permission_classes=[IsAuthenticatedWorker], methods=['get'])
+    def tasks(self, request):
+        print(request.GET.get('hour'))
+        return Response({"message": "Work!"}, 200)

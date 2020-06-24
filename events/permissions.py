@@ -5,6 +5,7 @@ from station_auth.models import StationToken
 import jwt
 from jwt import DecodeError, ExpiredSignature
 token_secret = local_settings.SCREEN_TOKEN_SECRET
+worker_token = local_settings.WORKER_TOKEN
 token_key_word_origin = local_settings.SCREEN_TOKEN_KEY_WORD
 
 
@@ -25,6 +26,20 @@ class IsAuthenticatedScreen(permissions.BasePermission):
                 token_obj = StationToken.objects.filter(station_id=token["sub"], token=t).first()
                 if token_obj:
                     return True
+        if not request.user.is_authenticated:
+            return False
+        if request.user.is_admin:
+            return True
+        return False
+
+
+class IsAuthenticatedWorker(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        if "HTTP_AUTHORIZATION" in request.META:
+            t = request.META["HTTP_AUTHORIZATION"].split()[1]
+            if t == worker_token:
+                return True
         if not request.user.is_authenticated:
             return False
         if request.user.is_admin:

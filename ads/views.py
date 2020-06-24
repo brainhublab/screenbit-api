@@ -1,6 +1,6 @@
 from .models import Ad
 from .serializers import AdSerializer
-from .permissions import IsAdminUserOrOwner
+from .permissions import IsAdminUserOrOwner, IsAuthenticatedWorker
 from rest_framework import viewsets, filters, serializers
 from django.db.models import Q
 from django_filters import rest_framework as django_rest_filters
@@ -90,3 +90,13 @@ class AdViewSet(viewsets.ModelViewSet):
             return Response({"areas": local_settings.AREAS}, 200)
         else:
             return Response({"message": "Permission denied"}, 403)
+
+    @action(detail=False, permission_classes=[IsAuthenticatedWorker], methods=['get'])
+    def active(self, request):
+        """Action that return list of active ads for current hour"""
+        hour = request.GET.get('hour')
+        print(hour)
+        active_ads = Ad.objects.filter(is_active=True, hours__icontains=hour)
+
+        print(active_ads)
+        return Response({"active_ads": "imaa"}, 200)

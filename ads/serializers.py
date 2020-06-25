@@ -118,3 +118,12 @@ def is_ext_approved(media_file):
         return "IM"
     else:
         raise serializers.ValidationError({"message": "Unsupported file extension"})
+
+
+class ActiveAdsIdsSerializer(serializers.ModelSerializer):
+    """ Active advertisments id's
+        Used tp return only id's"""
+    class Meta:
+        model = Ad
+        fields = ("id", )
+        read_only_fields = fields

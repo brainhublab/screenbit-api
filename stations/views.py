@@ -1,4 +1,5 @@
 from .models import Station
+from station_auth.models import StationToken
 from .serializers import StationSerializer, StationLocationSerializer
 
 from .permissions import IsAdminUser, IsAuthenticated
@@ -14,8 +15,6 @@ from django.db.models import Q
 from django.db.models import Sum
 from django.core.exceptions import PermissionDenied
 from django_filters import rest_framework as django_rest_filters
-from django.http import HttpRequest
-
 global_variables = settings.GLOBAL_VARIABLE[0]
 
 
@@ -169,7 +168,8 @@ class StationViewSet(viewsets.ModelViewSet):
         else:
             raise serializer.ValidationError(("Login please"))
 
-    @action(detail=False, permission_classes=[HasAPIKey | IsAuthenticated], methods=['get'], url_path='areas/viewers')
+    @action(detail=False, permission_classes=[HasAPIKey | IsAuthenticated],
+            methods=['get'], url_path='areas/viewers')
     def viewers(self, request):
         """ Return count of all potential screen viewers in current area """
         if "areas" in request.GET:
@@ -177,6 +177,14 @@ class StationViewSet(viewsets.ModelViewSet):
             return Response(potential_viewwers, 200)
         else:
             return Response({"message": "Bad request parameters"}, 400)
+
+    @action(detail=False, permission_classes=[HasAPIKey | IsAdminUser],
+            methods=['patch'], url_path='trefresh/(?P<pk>\d*)')
+    def trefresh(self, request, pk):
+        """ Action to refresh screen token """
+        instance = self.get_object()
+        StationToken.objects.filter(station__id=pk).update(token=StationToken.create_token(self, instance))
+        return Response({"message": "Token refreshed successful!"}, 200)
 
 
 def station_portal_view(request):

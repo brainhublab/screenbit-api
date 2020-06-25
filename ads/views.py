@@ -1,5 +1,5 @@
 from .models import Ad
-from .serializers import AdSerializer
+from .serializers import AdSerializer, ActiveAdsIdsSerializer
 from .permissions import IsAdminUserOrOwner, IsAuthenticatedWorker
 from rest_framework import viewsets, filters, serializers
 from django.db.models import Q
@@ -71,21 +71,21 @@ class AdViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, permission_classes=[HasAPIKey | IsAdminUserOrOwner], methods=['patch'], url_path='enable/(?P<pk>\d*)')
     def enable(self, request, pk):
-        """Action that return list of Sifia's areas"""
+        """ Activate ad on screens programs """
         instance = self.get_object()
         ad_media_loader(instance)
         return Response({"message": "Enabaled"}, 200)
 
     @action(detail=False, permission_classes=[HasAPIKey | IsAdminUserOrOwner], methods=['patch'], url_path='disable/(?P<pk>\d*)')
     def disable(self, request, pk):
-        """Action that return list of Sifia's areas"""
+        """ Disactivate ad from screens programs """
         instance = self.get_object()
         ad_media_disable(instance)
         return Response({"message": "Disabled"}, 200)
 
     @action(detail=False, permission_classes=[HasAPIKey | IsAdminUserOrOwner], methods=['get'])
     def areas(self, request):
-        """Action that return list of Sifia's areas"""
+        """Action that return list of Sofia's areas"""
         if self.request.user:
             return Response({"areas": local_settings.AREAS}, 200)
         else:
@@ -99,4 +99,6 @@ class AdViewSet(viewsets.ModelViewSet):
         active_ads = Ad.objects.filter(is_active=True, hours__icontains=hour)
 
         print(active_ads)
-        return Response({"active_ads": "imaa"}, 200)
+        serializer = ActiveAdsIdsSerializer(
+            active_ads, many=True, context={'request': request})
+        return Response(serializer.data)

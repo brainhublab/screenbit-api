@@ -1,6 +1,6 @@
 from .models import Feedback
 from .serializers import FeedbackSerializer
-from .permissions import IsAuthenticatedScreen
+from .permissions import IsAdminUserOrOwner, IsAuthenticatedWorker
 from rest_framework import viewsets, filters
 from django.db.models import Q
 from django_filters import rest_framework as django_rest_filters
@@ -14,9 +14,19 @@ class FeedbackViewSet(viewsets.ModelViewSet):
     """
     queryset = Feedback.objects.order_by('-created_at')
     serializer_class = FeedbackSerializer
-    permission_classes = [HasAPIKey | IsAuthenticatedScreen]
+    permission_classes = [HasAPIKey | IsAdminUserOrOwner]
     filter_backends = (filters.SearchFilter,
                        django_rest_filters.DjangoFilterBackend, )
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == 'list':
+            permission_classes = [IsAdminUserOrOwner | IsAuthenticatedWorker]
+        else:
+            permission_classes = [IsAuthenticatedWorker]
+        return [permission() for permission in permission_classes]
 
     def filter_feedback_queryset(self, queryset, request):
         queryset = queryset.all()
@@ -24,24 +34,21 @@ class FeedbackViewSet(viewsets.ModelViewSet):
 
         ad_id = request.GET.get("ad_id")
         station_id = request.GET.get("station_id")
-        ex_duration = request.GET.get('ex_duration')
-        gte_duration = request.GET.get('gte_duration')
-        lte_duration = request.GET.get('lte_duration')
 
         if ad_id:
             conditions.add(Q(ad_id=ad_id), Q.OR)
         if station_id:
             conditions.add(Q(station_id=station_id), Q.OR)
-        if ex_duration:
-            conditions.add(Q(duration=ex_duration), Q.OR)
-        else:
-            if gte_duration:
-                conditions.add(Q(duration__gte=gte_duration), Q.AND)
-            if lte_duration:
-                conditions.add(Q(duration__lte=lte_duration), Q.AND)
+
         return queryset.filter(conditions)
 
     def list(self, request):
-        self.queryset = self.filter_feedback_queryset(self.queryset, request)
+        if hasattr(request, "user"):
+            if request.user.is_admin:
+                self.queryset = self.filter_feedback_queryset(self.queryset, request)
+            else:
+                self.queryset = self.filter_feedback_queryset(self.queryset.filter(ad__creator=request.user), request)
+        else:
+            return False
         serializer = self.serializer_class(self.queryset, many=True, context={'request': request})
         return Response(serializer.data)

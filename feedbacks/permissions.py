@@ -1,18 +1,36 @@
 from rest_framework import permissions
 from settings import local_settings
-from station_auth.models import StationToken
-token_key_word_origin = local_settings.SCREEN_TOKEN_SECRET
+from .models import Feedback
+worker_token = local_settings.WORKER_TOKEN
 
 
-class IsAuthenticatedScreen(permissions.BasePermission):
+class IsAdminUserOrOwner(permissions.BasePermission):
     def has_permission(self, request, view):
+        if request.user.is_authenticated:
+            return True
+        return False
 
-        if "HTTP_BIT_TOKEN" in request.META:
-            token_key_word = request.META["HTTP_BIT_TOKEN"].split()[0]
-            token = request.META["HTTP_BIT_TOKEN"].split()[1]
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if isinstance(obj, Feedback):
+            # only user can edit himself
+            if request.user.is_admin:
+                return True
+            else:
+                return False
 
-            if token_key_word == token_key_word_origin and token not in [None, ""]:
-                token_obj = StationToken.objects.filter(token=token).first()
-                if token_obj:
-                    return True
+
+class IsAuthenticatedWorker(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        if "HTTP_AUTHORIZATION" in request.META:
+            print(request.META["HTTP_AUTHORIZATION"])
+            t = request.META["HTTP_AUTHORIZATION"].split()[1]
+            if t == worker_token:
+                return True
+        if not request.user.is_authenticated:
+            return False
+        if request.user.is_admin:
+            return True
         return False

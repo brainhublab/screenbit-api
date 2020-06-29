@@ -4,6 +4,24 @@ from .models import Feedback
 worker_token = local_settings.WORKER_TOKEN
 
 
+class IsAdminUser(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            return False
+        if request.user.is_admin:
+            return True
+        return False
+
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if isinstance(obj, Feedback):
+            if request.user.is_admin:
+                return True
+            else:
+                return False
+
+
 class IsAdminUserOrOwner(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.user.is_authenticated:
@@ -25,7 +43,6 @@ class IsAuthenticatedWorker(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if "HTTP_AUTHORIZATION" in request.META:
-            print(request.META["HTTP_AUTHORIZATION"])
             t = request.META["HTTP_AUTHORIZATION"].split()[1]
             if t == worker_token:
                 return True

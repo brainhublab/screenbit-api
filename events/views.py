@@ -79,5 +79,7 @@ class EventViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, permission_classes=[IsAuthenticatedWorker], methods=['get'])
     def tasks(self, request):
-        print(request.GET.get('hour'))
+        data = request.data
+        # TODO: complete the request
+        print(data)
         return Response({"message": "Work!"}, 200)

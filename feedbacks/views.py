@@ -1,18 +1,21 @@
 from .models import Feedback
 from .serializers import FeedbackSerializer
-from .permissions import IsAdminUserOrOwner, IsAuthenticatedWorker
+from .permissions import IsAdminUser, IsAdminUserOrOwner, IsAuthenticatedWorker
 from rest_framework import viewsets, filters
-from django.db.models import Q
+from django.db.models import Q, F
 from django_filters import rest_framework as django_rest_filters
 from rest_framework.response import Response
 from rest_framework_api_key.permissions import HasAPIKey
+from rest_framework.decorators import action
+from stations.models import Station
+from ads.models import Ad
 
 
 class FeedbackViewSet(viewsets.ModelViewSet):
     """
     Feedback viewset
     """
-    queryset = Feedback.objects.order_by('-created_at')
+    queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
     permission_classes = [HasAPIKey | IsAdminUserOrOwner]
     filter_backends = (filters.SearchFilter,
@@ -23,17 +26,17 @@ class FeedbackViewSet(viewsets.ModelViewSet):
         Instantiates and returns the list of permissions that this view requires.
         """
         if self.action == 'list':
-            permission_classes = [IsAdminUserOrOwner | IsAuthenticatedWorker]
+            permission_classes = [IsAdminUserOrOwner]
         else:
-            permission_classes = [IsAuthenticatedWorker]
+            permission_classes = [IsAdminUser]
         return [permission() for permission in permission_classes]
 
     def filter_feedback_queryset(self, queryset, request):
         queryset = queryset.all()
         conditions = Q()
 
-        ad_id = request.GET.get("ad_id")
-        station_id = request.GET.get("station_id")
+        ad_id = request.GET.get("ad__id")
+        station_id = request.GET.get("station__id")
 
         if ad_id:
             conditions.add(Q(ad_id=ad_id), Q.OR)
@@ -52,3 +55,28 @@ class FeedbackViewSet(viewsets.ModelViewSet):
             return False
         serializer = self.serializer_class(self.queryset, many=True, context={'request': request})
         return Response(serializer.data)
+
+    @action(detail=False, permission_classes=[IsAuthenticatedWorker], methods=['post'])
+    def workerfeed(self, request):
+        """ Create or update feedback data (worker request) """
+        data = request.data
+        ad = Ad.objects.filter(pk=data["ad"]).first()
+        station = Station.objects.filter(pk=data["station"]).first()
+        feed = Feedback.objects.filter(station=station,
+                                       ad=ad,
+                                       hour=data["hour"]).update(viewers=F("viewers") + data["viewers"],
+                                                                 holders=F("holders") + data["holders"],
+                                                                 button_usrs=F("button_usrs") + data["button_usrs"],
+                                                                 reached=F("reached") + data["reached"])
+        if feed:
+            return Response()
+        else:
+            Feedback.objects.create(station=station,
+                                    ad=ad,
+                                    hour=data["hour"],
+                                    area=data["area"],
+                                    viewers=data["viewers"],
+                                    holders=data["holders"],
+                                    button_usrs=data["button_usrs"],
+                                    reached=data["reached"])
+            return Response()

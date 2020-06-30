@@ -7,7 +7,7 @@ import jwt
 
 
 class EventSerializer(serializers.HyperlinkedModelSerializer):
-    """Advertising serializer"""
+    """Events serializer"""
 
     token_secret = local_settings.SCREEN_TOKEN_SECRET
 
@@ -20,7 +20,7 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
         extra_kwargs = {field: {"required": True} for field in required_fields}
 
     def get_station_from_token(self):
-        """Gets current user from request"""
+        """ Get current user from request """
         request = self.context.get("request")
         token = jwt.decode(request.META["HTTP_BIT_TOKEN"].split()[1],
                            self.token_secret)
@@ -35,4 +35,16 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
             raise serializers.ValidationError()
         if data["type"] == "btn_usr" and "button_clicks" not in data:
             raise serializers.ValidationError()
+        if data["type"] != "btn_usr":
+            data["button_clicks"] = None
         return data
+
+
+class EventWorkerSerializer(serializers.HyperlinkedModelSerializer):
+    "Events serializer (worker)"
+
+    class Meta:
+        model = Event
+        fields = ("id", "station_id", "ad_id",
+                  "type", "hour", "duration", "button_clicks", "created_at", )
+        read_only_fields = ("id", "created_at", )

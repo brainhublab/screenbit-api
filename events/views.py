@@ -1,5 +1,5 @@
 from .models import Event
-from .serializers import EventSerializer
+from .serializers import EventSerializer, EventWorkerSerializer
 from .permissions import IsAuthenticatedScreen, IsAuthenticatedWorker
 from rest_framework import viewsets, filters
 from django.db.models import Q
@@ -7,6 +7,7 @@ from django_filters import rest_framework as django_rest_filters
 from rest_framework.response import Response
 from rest_framework_api_key.permissions import HasAPIKey
 from rest_framework.decorators import action
+from datetime import date
 
 
 class EventViewSet(viewsets.ModelViewSet):
@@ -69,17 +70,26 @@ class EventViewSet(viewsets.ModelViewSet):
                 conditions.add(Q(duration__gte=gte_duration), Q.AND)
             if lte_duration:
                 conditions.add(Q(duration__lte=lte_duration), Q.AND)
-
         return queryset.filter(conditions)
 
     def list(self, request):
         self.queryset = self.filter_event_queryset(self.queryset, request)
-        serializer = self.serializer_class(self.queryset, many=True, context={'request': request})
+        serializer = self.serializer_class(self.queryset,
+                                           many=True,
+                                           context={'request': request})
         return Response(serializer.data)
 
     @action(detail=False, permission_classes=[IsAuthenticatedWorker], methods=['get'])
-    def tasks(self, request):
-        data = request.data
-        # TODO: complete the request
-        print(data)
-        return Response({"message": "Work!"}, 200)
+    def worker(self, request):
+        """ retrurn all present hour events for current ad  (worker) """
+        params = request.query_params
+        if "hour" not in params or "ad_id" not in params:
+            return Response({"message": "Bad request!"}, 400)
+
+        res_data = Event.objects.filter(hour=params["hour"],
+                                        ad__id=params["ad_id"],
+                                        created_at__date=date.today()).order_by('station')
+        serializer = EventWorkerSerializer(
+            res_data, many=True, context={'request': request})
+
+        return Response(serializer.data)

@@ -28,7 +28,7 @@ class FeedbackViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             permission_classes = [IsAdminUserOrOwner]
         else:
-            permission_classes = [IsAdminUser]
+            permission_classes = [IsAdminUser | IsAuthenticatedWorker]
         return [permission() for permission in permission_classes]
 
     def filter_feedback_queryset(self, queryset, request):
@@ -57,11 +57,11 @@ class FeedbackViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=False, permission_classes=[IsAuthenticatedWorker], methods=['post'])
-    def workerfeed(self, request):
-        """ Create or update feedback data (worker request) """
+    def worker(self, request):
+        """ create or update feedback data (worker) """
         data = request.data
-        ad = Ad.objects.filter(pk=data["ad"]).first()
-        station = Station.objects.filter(pk=data["station"]).first()
+        ad = Ad.objects.filter(pk=data["ad_id"]).first()
+        station = Station.objects.filter(pk=data["station_id"]).first()
         feed = Feedback.objects.filter(station=station,
                                        ad=ad,
                                        hour=data["hour"]).update(viewers=F("viewers") + data["viewers"],
@@ -74,7 +74,7 @@ class FeedbackViewSet(viewsets.ModelViewSet):
             Feedback.objects.create(station=station,
                                     ad=ad,
                                     hour=data["hour"],
-                                    area=data["area"],
+                                    area=station.area,
                                     viewers=data["viewers"],
                                     holders=data["holders"],
                                     button_usrs=data["button_usrs"],

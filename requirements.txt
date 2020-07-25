@@ -2,7 +2,7 @@ aiohttp==3.4.4
 amqp==2.4.1
 appdirs==1.4.3
 async-timeout==3.0.1
-attrs==18.2.0
+attrs==19.3.0
 billiard==3.5.0.5
 black==18.9b0
 BlurWal==1.0.1

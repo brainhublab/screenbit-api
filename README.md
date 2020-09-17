@@ -1,8 +1,29 @@
+<div align="center">
+  <h1>Screenbit Api</h1>
+  <p>Server side implementation for screens content managing</p>
+  <!--
+  optional images (remove <-- arrows and use this layout if you need)
 
-# screenbit rest api
+  <p align="middle">
+    <img height="160" src="./images/cbm.jpg">
+    <img height="160" src="./images/earth.png">
+    <img height="160" src="./images/nature.png">
+  </p>
+  -->
+</div>
+
+## ✨ Features / Tech stack
+-   Python
+- 🌍 Django
+- 🌍 Django-Rest framework
+- 🌍 Celery for tasks management
+- 🌍 RabbitMQ
+-   Docker
+
+## 🔨 Install / Usage
+This repo depends on a lot of ENV variables and it's easier to use it using our docker configurations. See [Peevdimitar95/screenbitContainerization](/http/) for further instructions
 
 
-## configuration
-See `./settings`
+## 🤝 Contact
 
-- fill in .env (/screenbitConteinerisation/) file to can local_settings.py gets needed variables and edit your settings.
+Email us at [brainhublab@gmail.com](mailto:brainhublab@gmail.com)

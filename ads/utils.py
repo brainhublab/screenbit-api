@@ -6,6 +6,7 @@ from django.db.models import Max
 
 # Function to add advertisment media to stataions in current area and hour
 def ad_media_loader(instance):
+    """ add media to development screen object (MAC:TEST) """ 
     dev_station = Station.objects.filter(mac_addr="MAC:TEST").first()
     for hour in instance.hours:
         index = StationAdRelation.objects.filter(station=dev_station,

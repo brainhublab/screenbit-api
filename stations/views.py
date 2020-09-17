@@ -144,7 +144,7 @@ class StationViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def locations(self, request):
-        """Action that return only stations locations data"""
+        """Action that return only location data for stations"""
         if self.request.user:
             """Get stations by title or citi or place provider"""
             queryset = self.filter_companies_queryset(self.queryset, request)

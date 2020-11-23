@@ -21,7 +21,7 @@
 -   Docker
 
 ## 🔨 Install / Usage
-This repo depends on a lot of ENV variables and it's easier to use it using our docker configurations. See [Peevdimitar95/screenbitContainerization](https://git.brainhub.co/peio_jr/screenbitContainerization) for further instructions
+This repo depends on a lot of ENV variables and it's easier to use it using our docker configurations. See [brainhublab/screenbitContainerization](https://github.com/brainhublab/screenbit-containerization) for further instructions
 
 
 ## 🤝 Contact

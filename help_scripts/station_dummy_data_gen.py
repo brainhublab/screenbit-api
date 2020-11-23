@@ -244,7 +244,7 @@ admin_token = "NbvIf5kJDplnhElYx3riTlgFdCG7UR"
 headers = {'Authorization': 'Bearer ' + admin_token}
 
 
-""" Generate dummy data for station model """
+""" Generate dummy data for the station model """
 
 
 def autogen_stations(url, headers, areas):

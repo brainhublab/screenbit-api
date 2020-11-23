@@ -188,4 +188,3 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         decoupling will help you as things grow.
         """
         await self.send_json(event["content"])
-

@@ -7,8 +7,9 @@ global_variables = settings.GLOBAL_VARIABLE[0]
 
 
 class StationSerializer(serializers.HyperlinkedModelSerializer):
-    """Station serializer"""
-
+    """
+    Station serializer
+    """
     class Meta:
         model = Station
         fields = ("id", "url", "creator", 'creator_id', "pprovider",
@@ -23,7 +24,6 @@ class StationSerializer(serializers.HyperlinkedModelSerializer):
         extra_kwargs = {field: {"required": True} for field in required_fields}
 
     def get_current_user(self):
-        """Gets Current user from request"""
         user = None
         request = self.context.get("request")
         if request and hasattr(request, "user"):
@@ -32,7 +32,6 @@ class StationSerializer(serializers.HyperlinkedModelSerializer):
         return None
 
     def validate_creator(self, value):
-        """Validate author field"""
         user = self.get_current_user()
         if user != value:
             raise serializers.ValidationError(
@@ -52,8 +51,7 @@ class StationSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class StationLocationSerializer(serializers.ModelSerializer):
-    """Company Location Serializer
-        Used tp return only companies locations data"""
+    """ Serialize only companie's location """
     class Meta:
         model = Station
         fields = ("id", "lat", "long", "title")

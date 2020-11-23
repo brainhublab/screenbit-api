@@ -21,6 +21,7 @@ class EventViewSet(viewsets.ModelViewSet):
                        django_rest_filters.DjangoFilterBackend, )
 
     def filter_event_queryset(self, queryset, request):
+        """Create queryset"""
         queryset = queryset.all()
         conditions = Q()
 
@@ -81,7 +82,7 @@ class EventViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, permission_classes=[IsAuthenticatedWorker], methods=['get'])
     def worker(self, request):
-        """ retrurn all present hour events for current ad  (worker) """
+        """ Retrurn all ad events for requested hour (worker) """
         params = request.query_params
         if "hour" not in params or "ad_id" not in params:
             return Response({"message": "Bad request!"}, 400)

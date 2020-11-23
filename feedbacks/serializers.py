@@ -3,8 +3,9 @@ from rest_framework import serializers
 
 
 class FeedbackSerializer(serializers.HyperlinkedModelSerializer):
-    """Advertising serializer"""
-
+    """
+    Feedback serializer
+    """
     class Meta:
         model = Feedback
         fields = ("id", "url", "station", "station_id",

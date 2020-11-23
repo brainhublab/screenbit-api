@@ -9,8 +9,9 @@ global_variables = settings.GLOBAL_VARIABLE[0]
 
 
 class AdSerializer(serializers.HyperlinkedModelSerializer):
-    """Advertising serializer"""
-
+    """
+    Advertising serializer
+    """
     file = FileSerializer(
         many=True,
         read_only=True)
@@ -26,7 +27,6 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
         extra_kwargs = {field: {"required": True} for field in required_fields}
 
     def get_current_user(self):
-        """Gets current user from request"""
         user = None
         request = self.context.get("request")
         if request and hasattr(request, "user"):
@@ -35,7 +35,6 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
         return None
 
     def validate_creator(self, value):
-        """Validate creator field"""
         user = self.get_current_user()
         if user != value:
             raise serializers.ValidationError("You can not create services for another user")
@@ -50,21 +49,20 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
                     ("Duration valuie must be bigger than 0"))
 
     def create(self, validated_data):
-        """ Add file objects while advertising object is on create"""
-        """ Check count of image objects to create (allowed 1)"""
+        """ Create related file object (allowed only 1), when creating the 'Advertising' object"""
         media_file = self.context.get("view").request.FILES
         if len(media_file) != 1:
             raise serializers.ValidationError(
                 ("You can update exactly one file!"))
 
-        """ Check file extension """
+        # Check file extension
         file_ext = is_ext_approved(media_file)
         validated_data["media_type"] = file_ext
 
-        """ Save new file and duration value """
+        # Save new file and duration value
         for file in media_file.values():
             if file_ext == "VD":
-                """ load file information (if video) to get duration """
+                # load file information (if video) to get duration """
                 file_info = VideoFileClip(file.temporary_file_path())
                 validated_data["duration"] = file_info.duration
             elif "duration" not in validated_data:
@@ -72,32 +70,31 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
                     ({"duration": "Missing duration value!"}))
             ad_data = super().create(validated_data)
             file = File.objects.create(content_object=ad_data, file=file)
-        """ Load new media to screens """
+        # Load new media to screens
         ad_media_loader(ad_data)
         return ad_data
 
     def update(self, instance, validated_data):
-        """ Replace file objects while Advertising object is on update"""
-        """ Check count of image objects to create (allowed 1)"""
+        """ Replace related file object (allowed only 1), when updating 'Advertising' object """
         media_file = self.context.get("view").request.FILES
         if len(media_file) != 1:
             raise serializers.ValidationError(
                 ("You can update exactly one file!"))
 
-        """ Check file extension """
+        # Check file extension
         file_ext = is_ext_approved(media_file)
         validated_data["media_type"] = file_ext
-        """ Disable old media from screens """
+        # Disable old media from screens
         ad_media_disable(instance)
 
-        """ Delete old file from DB """
+        # Delete old file objects
         file_to_replace = File.objects.filter(object_id=instance.id)
         file_to_replace.delete()
 
-        """ Save new file and duration value """
+        # Save new file object and duration value
         for file in media_file.values():
             if file_ext == "VD":
-                """ load file information (if video) to get duration """
+                # load file information (if video) to get duration
                 file_info = VideoFileClip(file.temporary_file_path())
                 validated_data["duration"] = file_info.duration
             elif "duration" not in validated_data:
@@ -105,7 +102,7 @@ class AdSerializer(serializers.HyperlinkedModelSerializer):
                     ({"duration": "Missing duration value!"}))
             ad_data = super().update(instance, validated_data)
             file = File.objects.create(content_object=ad_data, file=file)
-        """ Load new media to screens """
+        # Load new media to screens
         ad_media_loader(ad_data)
         return ad_data
 
@@ -121,8 +118,9 @@ def is_ext_approved(media_file):
 
 
 class ActiveAdsIdsSerializer(serializers.ModelSerializer):
-    """ Active advertisments id's
-        Used tp return only id's"""
+    """
+    Serialize only id's from Advertising objects
+    """
     class Meta:
         model = Ad
         fields = ("id", )

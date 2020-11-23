@@ -48,4 +48,3 @@ class Message(models.Model):
         else:
             print(self.text)
             return self.text
-

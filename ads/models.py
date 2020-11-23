@@ -11,7 +11,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Ad(models.Model):
     """
-    Advertising materials Model
+    Advertising data model
     """
     creator = models.ForeignKey(
         User,

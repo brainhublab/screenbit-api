@@ -28,7 +28,7 @@ class Station(models.Model):
     title = models.TextField(max_length=60, blank=False)
     description = models.TextField(max_length=300, blank=False)
 
-    """ List of cities to chose for location"""
+    # List of citie choises for location
     SOFIA = "SO"
     BURGAS = "BS"
     PLOVDIV = "PL"
@@ -65,6 +65,7 @@ class Station(models.Model):
 
 
 class StationAdRelation(models.Model):
+    # ManyToMany trough model
     ad = models.ForeignKey(Ad, on_delete=models.CASCADE, related_name='stadrelation')
     station = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='stadrelation')
 

@@ -7,7 +7,9 @@ import jwt
 
 
 class EventSerializer(serializers.HyperlinkedModelSerializer):
-    """Events serializer"""
+    """
+    Events serializer
+    """
 
     token_secret = local_settings.SCREEN_TOKEN_SECRET
 
@@ -20,7 +22,6 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
         extra_kwargs = {field: {"required": True} for field in required_fields}
 
     def get_station_from_token(self):
-        """ Get current user from request """
         request = self.context.get("request")
         token = jwt.decode(request.META["HTTP_BIT_TOKEN"].split()[1],
                            self.token_secret)
@@ -41,8 +42,9 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EventWorkerSerializer(serializers.HyperlinkedModelSerializer):
-    "Events serializer (worker)"
-
+    """
+    Events serializer (worker)
+    """
     class Meta:
         model = Event
         fields = ("id", "station_id", "ad_id",

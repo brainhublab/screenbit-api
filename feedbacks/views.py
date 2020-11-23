@@ -32,6 +32,7 @@ class FeedbackViewSet(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def filter_feedback_queryset(self, queryset, request):
+        """Create queryset"""
         queryset = queryset.all()
         conditions = Q()
 
@@ -46,6 +47,7 @@ class FeedbackViewSet(viewsets.ModelViewSet):
         return queryset.filter(conditions)
 
     def list(self, request):
+        """Custom list processing"""
         if hasattr(request, "user"):
             if request.user.is_admin:
                 self.queryset = self.filter_feedback_queryset(self.queryset, request)
@@ -58,7 +60,7 @@ class FeedbackViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, permission_classes=[IsAuthenticatedWorker], methods=['post'])
     def worker(self, request):
-        """ create or update feedback data (worker) """
+        """Create or update feedback data (worker)"""
         data = request.data
         ad = Ad.objects.filter(pk=data["ad_id"]).first()
         station = Station.objects.filter(pk=data["station_id"]).first()

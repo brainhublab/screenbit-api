@@ -35,7 +35,7 @@ class Event(models.Model):
         default=local_settings.VIEWER)
 
     button_clicks = models.IntegerField(null=True)
-    """ Duration will be stored as seconds """
+    # Duration will be stored as seconds
     duration = models.IntegerField(null=False,
                                    default=0)
 

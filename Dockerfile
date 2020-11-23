@@ -1,9 +1,9 @@
 FROM python:3.7.4-alpine3.9
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir /usr/src/screenbitApi
-COPY requirements.txt /usr/src/screenbitApi
-WORKDIR /usr/src/screenbitApi
+RUN mkdir /usr/src/screenbit-api
+COPY requirements.txt /usr/src/screenbit-api
+WORKDIR /usr/src/screenbit-api
 
 
 RUN apk add --no-cache --virtual .build-deps \
@@ -33,7 +33,7 @@ RUN mod_wsgi-express module-config >> /etc/apache2/httpd.conf
 ENV screenbit_ENV=development
 
 COPY ./screenbit.conf /etc/apache2/conf.d
-COPY . /usr/src/screenbitApi
+COPY . /usr/src/screenbit-api
 
 RUN apk add --no-cache tzdata
 ENV TZ Europe/Sofia

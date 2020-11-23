@@ -29,15 +29,14 @@ class StationViewSet(viewsets.ModelViewSet):
                        django_rest_filters.DjangoFilterBackend, )
 
     def perform_create(self, serializer):
-        """Add user that make request to serializer data"""
+        """Add the user from request to serializer data"""
         if self.request.user:
             serializer.save(creator=self.request.user)
         else:
             raise PermissionDenied()
 
     def filter_statoins_queryset(self, queryset, request):
-        """Filter stations by by free hours, title, city"""
-
+        """Create queryset"""
         queryset = queryset.all()
         hours_condition = Q()
         if "free_hours" in request.data:
@@ -93,16 +92,14 @@ class StationViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, permission_classes=[], methods=['get'])
     def media(self, request):
-        """ get the right host (localhost / ip addr / domain ...) for media url """
+        """Returns station's loaded ads (for current hour optional)
+        by mac address or id(for development usage)"""
         MEDIA_URL = "http://%s/screenbit_api/server_media/" % (request.META["HTTP_HOST"])
-        """ Get loaded ads for hour by mac address
-            Function will be used by station to get needed ads to show"""
         params = self.request.query_params
         if "mac_addr" in params:
             mac_addr = params["mac_addr"]
             station = get_object_or_404(Station, mac_addr=mac_addr)
         elif "id" in params:
-            """ Get loaded ads for hour by id for development """
             id = int(params["id"])
             station = get_object_or_404(Station, id=id)
         else:
@@ -112,11 +109,8 @@ class StationViewSet(viewsets.ModelViewSet):
             if "hour" in params:
                 hour = str(params["hour"])
                 if len(params["hour"]) == 1:
-                    """
-                    add '0' if single number for hour parameter
-                    to can be veryfied in 'available_hours_choices'
-                    (0-9) -> (00-09)
-                    """
+                    # fix hour parameter (0-9 -> 00-99)
+                    # TODO: fix parameter in UI
                     hour = "0" + hour
                 if hour not in global_variables["available_hours_choices"]:
                     return Response({"message": "Bad Request"}, 400)
@@ -144,11 +138,11 @@ class StationViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def locations(self, request):
-        """Action that return only location data for stations"""
+        """Returns only the locations from stations data"""
         if self.request.user:
-            """Get stations by title or citi or place provider"""
+            # Filter by requested queryset
             queryset = self.filter_companies_queryset(self.queryset, request)
-            """Search by latitude, longitude and distance / optional /"""
+            # Search by latitude and longitude
             params = self.request.query_params
             if "lat1" in params and "long1" in params and "lat2" in params and "long2" in params:
                 lat1 = float(params["lat1"])
@@ -171,7 +165,7 @@ class StationViewSet(viewsets.ModelViewSet):
     @action(detail=False, permission_classes=[HasAPIKey | IsAuthenticated],
             methods=['get'], url_path='areas/viewers')
     def viewers(self, request):
-        """ Return count of all potential screen viewers in current area """
+        """Return count of all potential screen viewers for requested areas"""
         if "areas" in request.GET:
             potential_viewwers = Station.objects.filter(area__in=request.GET.getlist("areas")).aggregate(Sum("viewers"))
             return Response(potential_viewwers, 200)
@@ -181,7 +175,7 @@ class StationViewSet(viewsets.ModelViewSet):
     @action(detail=False, permission_classes=[HasAPIKey | IsAdminUser],
             methods=['patch'], url_path='trefresh/(?P<pk>\d*)')
     def trefresh(self, request, pk):
-        """ Action to refresh screen token """
+        """Refresh screen token"""
         instance = self.get_object()
         StationToken.objects.filter(station__id=pk).update(token=StationToken.create_token(self, instance))
         return Response({"message": "Token refreshed successful!"}, 200)

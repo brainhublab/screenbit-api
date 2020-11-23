@@ -23,7 +23,7 @@ class AdViewSet(viewsets.ModelViewSet):
                        django_rest_filters.DjangoFilterBackend, )
 
     def perform_create(self, serializer):
-        """Add user that make request to serializer data"""
+        """Add the user from request to serializer data."""
         if self.request.user:
             serializer.save(creator=self.request.user)
         else:
@@ -64,28 +64,28 @@ class AdViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         if instance.is_active:
             raise serializers.ValidationError({"message":
-                                               "Ad is used in activ advertisment. \
-                                                Please disable advertisement media before delete"})
+                                               "Ad is activ. \
+                                                Please disable the ad before delete it."})
         else:
             return super(AdViewSet, self).destroy(request, *args, **kwargs)
 
     @action(detail=False, permission_classes=[HasAPIKey | IsAdminUserOrOwner], methods=['patch'], url_path='enable/(?P<pk>\d*)')
     def enable(self, request, pk):
-        """ Activate ad on screens programs """
+        """Activate ad on screens"""
         instance = self.get_object()
         ad_media_loader(instance)
         return Response({"message": "Enabaled"}, 200)
 
     @action(detail=False, permission_classes=[HasAPIKey | IsAdminUserOrOwner], methods=['patch'], url_path='disable/(?P<pk>\d*)')
     def disable(self, request, pk):
-        """ Disactivate ad from screens programs """
+        """Deactivate ad from screens"""
         instance = self.get_object()
         ad_media_disable(instance)
         return Response({"message": "Disabled"}, 200)
 
     @action(detail=False, permission_classes=[HasAPIKey | IsAdminUserOrOwner], methods=['get'])
     def areas(self, request):
-        """Action that return list of Sofia's areas"""
+        """Return list of areas (for now only areas of Sofia)"""
         if self.request.user:
             return Response({"areas": local_settings.AREAS}, 200)
         else:
@@ -93,7 +93,7 @@ class AdViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, permission_classes=[IsAuthenticatedWorker], methods=['get'])
     def active(self, request):
-        """Action that return list of active ads for current hour"""
+        """Return list of active ads for current hour"""
         hour = request.GET.get('hour')
         print(hour)
         active_ads = Ad.objects.filter(is_active=True, hours__icontains=hour)

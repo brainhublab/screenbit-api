@@ -47,7 +47,7 @@ class StationToken(models.Model):
 
 @receiver(post_save, sender=Station)
 def on_station_created(sender, instance, created, **kwargs):
-    """ Create authentication token for Station obj """
+    """Create authentication token for Station obj"""
     if created:
         station_token = StationToken.objects.create(
             station=instance
